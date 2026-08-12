@@ -36,3 +36,5 @@ credentials/
 *.aab
 *.apks
 signing.env
+
+PUBLISHING*.md
