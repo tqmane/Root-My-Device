@@ -318,13 +318,45 @@ if hashlib.sha256(embedded).digest() != hashlib.sha256(expected).digest():
     raise SystemExit("paired Manager libksud.so does not match the patched ksud")
 PY
 
-# If apksigner is installed, assert the final APK signer is exactly the cert
-# compiled into the module. (The pre-build keytool check already set the module
-# value, so absence of apksigner is not a reason to throw away the build.)
+# Assert that the final APK signer is exactly the certificate compiled into
+# kernelsu.ko. Do not depend on one exact apksigner label: newer apksigner
+# versions may describe a signer as "Signer (minSdkVersion=...)" rather than
+# "Signer #1". Parse any signer certificate SHA-256 line and normalize case.
 APKSIGNER="$ANDROID_BUILD_TOOLS/apksigner"
-GOT_CERT=$($APKSIGNER verify --print-certs "$MANAGER_APK" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p' | head -n 1)
-[ "$GOT_CERT" = "$MANAGER_CERT_HASH" ] || {
-  echo "Manager signer mismatch: got=$GOT_CERT expected=$MANAGER_CERT_HASH" >&2
+if ! APKSIGNER_CERT_OUTPUT=$(
+  "$APKSIGNER" verify --print-certs "$MANAGER_APK" 2>&1
+); then
+  echo "apksigner failed while verifying the repacked Manager:" >&2
+  printf '%s\n' "$APKSIGNER_CERT_OUTPUT" >&2
+  exit 4
+fi
+
+GOT_CERT=$(printf '%s\n' "$APKSIGNER_CERT_OUTPUT" | awk '
+  {
+    line=$0
+    sub(/\r$/, "", line)
+    lower=tolower(line)
+    marker="certificate sha-256 digest:"
+    marker_pos=index(lower, marker)
+    if (marker_pos > 0 && lower ~ /^[[:space:]]*signer([ #\(]|$)/) {
+      digest=substr(line, marker_pos + length(marker))
+      gsub(/[^0-9A-Fa-f]/, "", digest)
+      if (length(digest) == 64) {
+        print tolower(digest)
+        exit
+      }
+    }
+  }
+')
+EXPECTED_CERT=$(printf '%s' "$MANAGER_CERT_HASH" | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')
+
+[ -n "$GOT_CERT" ] || {
+  echo "Could not parse Manager signer SHA-256 from apksigner output:" >&2
+  printf '%s\n' "$APKSIGNER_CERT_OUTPUT" >&2
+  exit 4
+}
+[ "$GOT_CERT" = "$EXPECTED_CERT" ] || {
+  echo "Manager signer mismatch: got=$GOT_CERT expected=$EXPECTED_CERT" >&2
   exit 4
 }
 

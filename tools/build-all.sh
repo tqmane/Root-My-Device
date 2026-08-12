@@ -239,14 +239,44 @@ printf '%s\n' "  shared KernelSU: $KSU_EXPECTED" "  shared patches:  $RMD_EXPECT
 
 export ROOT_MY_DEVICE_REPOSITORY_ROOT="$REPOSITORY_ROOT"
 
+# A combined build should attempt every selected device even when an earlier
+# device fails. Otherwise a Nothing failure prevents the OnePlus build from
+# ever starting and makes the wrapper look like a Nothing-only build.
+build_failures=()
+
+run_device_build() {
+  local label=$1
+  local directory=$2
+  shift 2
+
+  echo "==> Building $label release set"
+  if (cd "$directory" && "$@"); then
+    echo "==> $label release set completed"
+  else
+    local rc=$?
+    echo "[ERROR] $label release set failed with exit code $rc; continuing with remaining selected devices" >&2
+    build_failures+=("$label:$rc")
+  fi
+}
+
 if [ "$BUILD_NOTHING" -eq 1 ]; then
-  echo "==> Building Nothing Phone (3a) release set"
-  (cd "$REPOSITORY_ROOT/devices/nothing-phone-3a" && "${nothing_command[@]}")
+  run_device_build \
+    "Nothing Phone (3a)" \
+    "$REPOSITORY_ROOT/devices/nothing-phone-3a" \
+    "${nothing_command[@]}"
 fi
 
 if [ "$BUILD_ONEPLUS" -eq 1 ]; then
-  echo "==> Building OnePlus Pad 3 release set"
-  (cd "$REPOSITORY_ROOT/devices/oneplus-pad-3" && "${oneplus_command[@]}")
+  run_device_build \
+    "OnePlus Pad 3" \
+    "$REPOSITORY_ROOT/devices/oneplus-pad-3" \
+    "${oneplus_command[@]}"
 fi
 
-echo "==> Combined release build completed"
+if [ "${#build_failures[@]}" -ne 0 ]; then
+  echo "==> Combined release build finished with failures:" >&2
+  printf '  - %s\n' "${build_failures[@]}" >&2
+  exit 1
+fi
+
+echo "==> Combined release build completed successfully"
