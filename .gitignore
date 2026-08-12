@@ -1,0 +1,38 @@
+# Gradle / Android
+.gradle/
+.kotlin/
+**/build/
+**/.cxx/
+**/local.properties
+**/.idea/
+*.iml
+
+# Generated native and diagnostic output
+out/
+dist/
+support/
+devices/*/generated/*
+!devices/*/generated/.gitkeep
+devices/*/diagnostics/*/*.log
+devices/*/diagnostics/*/*.txt
+__pycache__/
+*.py[cod]
+# Signing material and local credentials
+.env
+.env.*
+!.env.example
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.pem
+*.key
+*.der
+*.password
+*.passwords
+credentials/
+# Release binaries are published separately, not committed
+*.apk
+*.aab
+*.apks
+signing.env

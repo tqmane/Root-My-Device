@@ -1,0 +1,32 @@
+{
+  "$comment": [
+    "Root My Nothing exact-build registry.",
+    "This public repository intentionally contains only the A059/Asteroids target.",
+    "A different full fingerprint, build display, SDK, security patch, kernel release,",
+    "ABI, or page size requires a separately reviewed profile; no offset guessing is permitted."
+  ],
+  "schemaVersion": 1,
+  "targets": [
+    {
+      "profileId": "asteroids-jp-B4.1-260618-1048",
+      "payload": "CVE-2026-43499",
+      "core": "core61",
+      "device": "asteroids",
+      "region": "JP",
+      "manufacturer": "Nothing",
+      "model": "A059",
+      "marketingName": "Nothing Phone (3a)",
+      "soc": "Qualcomm SM7635 (Snapdragon 7s Gen 3)",
+      "kernelRelease": "6.1.157-android14-11-g82d681c9b06b-ab14634535",
+      "kernelVersion": "Linux version 6.1.157-android14-11-g82d681c9b06b-ab14634535 (build-user@build-host) (Android (10087095, +pgo, +bolt, +lto, -mlgo, based on r487747c) clang version 17.0.2 (https://android.googlesource.com/toolchain/llvm-project d9f89f4d16663d5012e5c09495f3b30ece3d2362), LLD 17.0.2) #1 SMP PREEMPT Mon Dec 22 19:22:33 UTC 2025",
+      "kernelBuildVersion": "#1 SMP PREEMPT Mon Dec 22 19:22:33 UTC 2025",
+      "buildDisplay": "B4.1-260618-1048",
+      "buildFingerprint": "Nothing/AsteroidsJPN/Asteroids:16/BQ2A.250721.001-BP2A.250605.031.A3/2606181048:user/release-keys",
+      "securityPatch": "2026-06-01",
+      "sdk": 36,
+      "abi": "arm64-v8a",
+      "pageSize": 4096,
+      "status": "Maintainer device-verified on this exact build: the Shizuku application route acquires temporary root, late-loads KernelSU 32525, authenticates the paired Root My Device KSU Manager, restores SELinux enforcing, and completes the explicit module/zygote stages. Root remains temporary and disappears after reboot."
+    }
+  ]
+}

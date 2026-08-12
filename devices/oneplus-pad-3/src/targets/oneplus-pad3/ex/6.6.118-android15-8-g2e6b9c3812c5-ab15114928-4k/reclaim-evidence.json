@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "target": "OPD2415_16.0.9.400(EX01)",
+  "kernel_release": "6.6.118-android15-8-g2e6b9c3812c5-ab15114928-4k",
+  "oss": {
+    "repository": "android_kernel_oneplus_sm8750",
+    "branch": "oneplus/sm8750_b_16.0.0_pad_3",
+    "commit": "a28bd5b70ee5ba6e9d24489f20b9c4ac2872f9ec",
+    "subject": "Synchronize code for OnePlus OPD2415_16.0.9.400(EX01) Based on QCOM release TAG:AU_LINUX_KERNEL.PLATFORM.4.0.R1.00.00.00.061.111",
+    "contracts": [
+      "net/unix/af_unix.c: unix_create1 sets sk_allocation=GFP_KERNEL_ACCOUNT",
+      "net/unix/af_unix.c: unix_stream_sendmsg uses SKB_MAX_HEAD(0), PAGE_ALIGN(data_len), and sock_alloc_send_pskb",
+      "net/core/skbuff.c: alloc_skb_with_frags adds PAGE_SIZE<<order to skb->truesize",
+      "net/core/sock.c: sock_alloc_send_pskb admits an allocation only while sk_wmem_alloc<sk_sndbuf",
+      "include/linux/skbuff.h: SKB_DATA_ALIGN and SKB_TRUESIZE definitions"
+    ]
+  },
+  "extracted_kernel": {
+    "btf_sha256": "126141db2e40972c63fa12b2e080faa86080314e3a8bee0f0ccc420ad6a39d67",
+    "ikconfig_sha256": "032ff35b6657c91047c93090a1884993ca622d0720fc2bb772a7ef0558c3fb7e",
+    "skb_shared_info_size": 360,
+    "sk_buff_size": 240,
+    "cache_line_size": 64,
+    "config_required": [
+      "CONFIG_MEMCG=y",
+      "CONFIG_MEMCG_KMEM=y",
+      "CONFIG_SLUB=y",
+      "CONFIG_SLUB_CPU_PARTIAL=y",
+      "CONFIG_RANDOM_KMALLOC_CACHES=n"
+    ]
+  },
+  "live_slabinfo": {
+    "cache": "kmalloc-cg-4k",
+    "object_size": 4096,
+    "objects_per_slab": 8,
+    "pages_per_slab": 8,
+    "captures": [
+      {
+        "timestamp": "2026-08-11T17:53:05+09:00",
+        "bugreport_sha256": "b8ecd0962278af492364b059760783a886928e15dc3a77bfbeb1e090b568167c",
+        "line": "kmalloc-cg-4k       1688   1688   4096    8    8 : tunables    0    0    0 : slabdata    211    211      0"
+      },
+      {
+        "timestamp": "2026-08-11T18:05:37+09:00",
+        "bugreport_sha256": "b37cbe3e16edca3100aa1f9d34e57a4b102856466c9dc26bf787746035b5746b",
+        "line": "kmalloc-cg-4k       1629   1752   4096    8    8 : tunables    0    0    0 : slabdata    219    219      0"
+      },
+      {
+        "timestamp": "2026-08-11T18:28:16+09:00",
+        "bugreport_sha256": "da771729f3f3d0cf48af48de48123f56a74717f4dd43a98867d7df66574ae2a9",
+        "line": "kmalloc-cg-4k       1504   1504   4096    8    8 : tunables    0    0    0 : slabdata    188    188      0"
+      }
+    ]
+  },
+  "head_guard_contract": {
+    "decision": "restore the target-only four-send geometry that produced three FOPS hits in three observed runs; the twelve-send geometry produced one hit and multiple misses and can self-contaminate the second allocator phase",
+    "allocation_sequence": [
+      "group-0-send-8",
+      "group-0-recv-4"
+    ],
+    "groups": 1,
+    "heads_allocated_before_any_free": 8,
+    "free_heads_retained_for_reclaim": 4,
+    "live_heads_retained_through_all_reclaim_sends": 4,
+    "reclaim_sends": 4,
+    "per_group_queue_bytes_during_reclaim": "0x3a00",
+    "runtime_status": "pending-exact-device-rerun"
+  },
+  "pselect_expected_ready_observations": {
+    "diagnostic_only": true,
+    "value": 8,
+    "distinct_log_sha256": [
+      "79afb4fae1282260a91bbf02c713ef994d9d830e352873b3c57f186c30aa0a98",
+      "a45c1e4bd1731861c3be36647a560df26cf23e3f9f4ac281f49eb4c39dbb6c34",
+      "f6de6b0b858e3021bd637d34d8cc86bbd11dfa037301c0314eb505a883477be4",
+      "31b89fbc44fdeb96468abb4baee6ed615b601d94e510e9a9d401903e87db98e1",
+      "9f44c86fd7f5ad570a0ae64b161dab3a1d488dc43cc0aceb2688e7d2305f005b",
+      "d727bcfb81a0d624ae496325f058e940d25970b3d784002b8588a0d983290554"
+    ],
+    "receipt_gate": "try_cfi_stage exact configfs receipt and cleanup remains authoritative"
+  }
+}

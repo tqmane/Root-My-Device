@@ -1,0 +1,352 @@
+{
+  "schema_version": 1,
+  "target_id": "oneplus-pad3-ex-16.0.9.400",
+  "device": {
+    "manufacturer": "OnePlus",
+    "marketing_name": "OnePlus Pad 3",
+    "model": "OPD2415",
+    "device": "OP6190L1",
+    "product": "OPD2415IN",
+    "soc": "SM8750P",
+    "build_display": "OPD2415_16.0.9.400(EX01)",
+    "build_fingerprint": "OnePlus/OPD2415IN/OP6190L1:16/AP3A.240617.008/V.R4T3.17bf73d_cf42a1_c9913b:user/release-keys",
+    "security_patch": "2026-07-01",
+    "android_release": "16",
+    "sdk": 36,
+    "abi": "arm64-v8a"
+  },
+  "kernel": {
+    "release": "6.6.118-android15-8-g2e6b9c3812c5-ab15114928-4k",
+    "version": "Linux version 6.6.118-android15-8-g2e6b9c3812c5-ab15114928-4k (kleaf@build-host) (Android (11368308, +pgo, +bolt, +lto, +mlgo, based on r510928) clang version 18.0.0 (https://android.googlesource.com/toolchain/llvm-project 477610d4d0d988e69dbc3fae4fe86bff3f07f2b5), LLD 18.0.0) #1 SMP PREEMPT Mon Mar 30 10:41:25 UTC 2026",
+    "build_version": "#1 SMP PREEMPT Mon Mar 30 10:41:25 UTC 2026",
+    "kmi": "android15-6.6",
+    "page_size": 4096,
+    "va_bits": 39,
+    "pa_bits": 48,
+    "possible_cpus": 8,
+    "btf": true,
+    "kallsyms": true,
+    "modversions": true,
+    "module_sig": true,
+    "module_sig_force": false,
+    "module_sig_protect": true,
+    "ashmem": "c-static-miscdevice",
+    "cfi": true,
+    "shadow_call_stack": true
+  },
+  "artifacts": {
+    "boot_img_sha256": "0e584a801f2214758758221feb47dd3e06736d0a348709780bd58aea78fc420f",
+    "kernel_sha256": "d4d2cbf9cf97e522b2e4a4ba8cee6b1ef205eaa5b04d632a25b0e21c8c817bf5",
+    "vmlinux_sha256": "0b382adfcf84c4de7095fce6c120d9a2a53c30f2367abccc79c124b39c78fc89",
+    "module_symvers_sha256": "bd7103fb08561e707cf910cb9fe495571c9219e74d8c051213dd65496316e2b9",
+    "ikconfig_sha256": "032ff35b6657c91047c93090a1884993ca622d0720fc2bb772a7ef0558c3fb7e",
+    "btf_sha256": "126141db2e40972c63fa12b2e080faa86080314e3a8bee0f0ccc420ad6a39d67",
+    "kallsyms_sha256": "2928ed9b5a9b12d00fe2cfe46c6b3a9ed3431111d3b61a70c915316c8a8c1c3e",
+    "xbl_config_sha256": "ebde7e272f73b1670405f3a687bdc23c0b7e4663b8c1e8de1a5ddc518691992a"
+  },
+  "physical_layout": {
+    "phys_offset": "0x80000000",
+    "kernel_phys_load": "0xa8000000",
+    "kernel_phys_load_status": "exact-xbl-candidate-live-image-data-gated-pending-rerun",
+    "kernel_region_start": "0xa8000000",
+    "kernel_region_size": "0x10000000",
+    "kernel_image_size": "0x23a0000",
+    "runtime_gate": "five-live-image-qwords-must-match-before-selinux-or-root-write",
+    "runtime_physical_derivation": {
+      "stable_reads_each": 2,
+      "memstart_addr_offset": "0x0167a548",
+      "kimage_vaddr_offset": "0x0167a5f8",
+      "kimage_voffset_offset": "0x0167a600",
+      "formula": "kimage-vaddr-minus-kimage-voffset",
+      "require_memstart": "0x80000000",
+      "require_phys_equals_candidate": true,
+      "require_region_bounds": true,
+      "require_2m_alignment": true
+    },
+    "runtime_validation": [
+      {
+        "address": "nfulnl-name-rodata",
+        "offset": "0x0160f939",
+        "expected": "0x6e696c74656e666e"
+      },
+      {
+        "address": "nfulnl-name-pointer",
+        "offset": "0x02112260",
+        "expected": "kaslr-base-plus-0x0160f939"
+      },
+      {
+        "address": "nfulnl-type-qword",
+        "offset": "0x02112268",
+        "expected": "0x1"
+      },
+      {
+        "address": "nfulnl-logfn-pointer",
+        "offset": "0x02112270",
+        "expected": "kaslr-base-plus-0x00e5e878"
+      },
+      {
+        "address": "ashmem-fops-open-pointer",
+        "offset": "0x012ef8f8",
+        "expected": "kaslr-base-plus-0x008bc8e0"
+      }
+    ],
+    "validation": [
+      {
+        "offset": "0x0",
+        "bytes": "4d5a40fa19a87314"
+      },
+      {
+        "offset": "0x38",
+        "bytes": "41524d64"
+      },
+      {
+        "offset": "0x40",
+        "bytes": "50450000"
+      },
+      {
+        "offset": "0x1147e60",
+        "bytes": "494b4346475f5354"
+      },
+      {
+        "offset": "0x170b944",
+        "bytes": "9feb010018000000"
+      }
+    ]
+  },
+  "pselect": {
+    "status": "exact-static-disassembly-verified",
+    "stack_fds_from_syscall_sp": "-0x200",
+    "waiter_from_syscall_sp": "-0x200",
+    "waiter_word": 0,
+    "fops_word_shift": -2,
+    "slide_word_shift": 0,
+    "nfds": 320,
+    "expected_ready_diagnostic": 8,
+    "expected_ready_is_success_gate": false
+  },
+  "kernelsnitch_diagnostics": {
+    "status": "diagnostic-only-stage-mismatch-no-route-gate",
+    "target_only_feature_macro": "PAD3_KERNELSNITCH_DIAGNOSTICS",
+    "target_only_feature_value": 1,
+    "counter": "cntvct_el0",
+    "slide_log_placement": "successful-slide-page-preparation-before-dirty-publication-and-pi-pselect",
+    "route_gate": false,
+    "reason": "historical-hit-miss-values-belong-to-fops-not-slide-stage",
+    "waiter_ready_barrier": {
+      "target_only_feature_macro": "PAD3_KERNELSNITCH_READY_BARRIER",
+      "target_only_feature_value": 1,
+      "waiters": 4096,
+      "ready_publish": "atomic-release-before-futex-wait",
+      "parent_observe": "atomic-acquire-exact-count",
+      "timeout_ms": 10000,
+      "final_same-core_yields": 1,
+      "failure_policy": "clean-collisions-not-found-no-partial-scan"
+    },
+    "leak_child_start_barrier": {
+      "target_only_feature_macro": "PAD3_KERNELSNITCH_CHILD_START_BARRIER",
+      "target_only_feature_value": 1,
+      "timeout_ms": 10000,
+      "child_first_action": "shared-futex-park",
+      "parent_release_after": "post25-cloned-and-pre-leak-post-memfds-pinned",
+      "purpose": "exclude-kernelsnitch-4096-thread-startup-from-pre24-leak-post25-mm-adjacency-window",
+      "failure_policy": "clean-pre-dirty-abort"
+    },
+    "evidence": "kernelsnitch-quality-evidence.json",
+    "evidence_sha256": "7dbcd2d7af763881e8cc717d50328084f3e3fb9788fb68800444e2af78bc3f2c"
+  },
+  "reclaim_hardening": {
+    "status": "exact-btf-config-oss-live-slabinfo-verified-proven-four-send-head-guard-pending-runtime-rerun",
+    "target_only_feature_macro": "SKB_RECLAIM_PAD3_HARDENING",
+    "target_only_feature_value": 1,
+    "legacy_core66_send_default": 4,
+    "evidence": "reclaim-evidence.json",
+    "evidence_sha256": "eaa3a4e19ec7b3dc2fdb6e6033440267b582244175fdc8d7b898d390a0a07a71",
+    "skb_shared_info_size": "0x168",
+    "skb_shared_info_aligned": "0x180",
+    "sk_buff_aligned": "0x100",
+    "max_linear_head": "0xe80",
+    "reclaim_payload_size": "0x8e80",
+    "order3_fragment_size": "0x8000",
+    "reclaim_skb_truesize": "0x9100",
+    "reclaim_sends": 4,
+    "minimum_effective_sndbuf": "0x24401",
+    "head_guard": {
+      "cache": "kmalloc-cg-4k",
+      "send_size": "0xe80",
+      "slab_order": 3,
+      "objects_per_slab": 8,
+      "groups": 1,
+      "sends_per_group": 8,
+      "total_heads_allocated_before_any_free": 8,
+      "synchronous_frees_per_group": 4,
+      "total_synchronous_frees": 4,
+      "queued_holders_per_group": 4,
+      "total_queued_holders_during_reclaim": 4,
+      "allocation_order": "one-group-send-eight-before-receiving-four",
+      "same_cpu": 0
+    },
+    "mm_leak_gate": {
+      "direct_alias_start": "0xffffff8000000000",
+      "direct_alias_end": "0xffffff8c00000000",
+      "object_size": "0x500",
+      "objects_per_slab": 25,
+      "require_exact_slot_alignment": true,
+      "exclusive_adjacency_sequence": "pre24-leak-parked-post25-then-release-after-all-mm-pins"
+    },
+    "fragment_placements": {
+      "lock": "0x0",
+      "fops": "0x100",
+      "w0": "0x300",
+      "fake_task": "0x400"
+    }
+  },
+  "fops_mode4_route": {
+    "status": "exact-vmlinux-btf-rb-erase-verified-pending-runtime-rerun",
+    "mode": 4,
+    "erase_case": "one-right-child-red-node",
+    "rb_erase_offset": "0x01043eac",
+    "rb_erase_cached_offset": "0x0012a744",
+    "rt_mutex_setprio_offset": "0x000f3fd8",
+    "node_parent": "fake_fops",
+    "node_right": "ashmem_misc_fops",
+    "node_left": "null",
+    "fake_task_pi_root": "null",
+    "fake_task_pi_leftmost": "null",
+    "rb_cached_leftmost": "null-skip-rb_next",
+    "waiter_task": "canonical-init_task",
+    "pi_top_task": "canonical-init_task",
+    "owner_before": "0x0",
+    "owner_after": "0x0",
+    "only_erase_collateral": "fake_fops.llseek",
+    "collateral_offset": "0x8",
+    "collateral_repair": "noop_llseek-exact-readback-before-fake-fops-use",
+    "runtime_layout_override": false,
+    "waiter_cleanup": {
+      "feature_macro": "DIRECT_WAITER_PI_CLEANUP",
+      "feature_value": 1,
+      "task_stack_offset": "0x38",
+      "thread_size": "0x4000",
+      "waiter_footprint": "0x70",
+      "blocked_on_alignment": 8,
+      "stable_reads_before": 2,
+      "zero_readbacks_after": 2,
+      "only_write": "task_struct.pi_blocked_on-zero",
+      "preconditions": [
+        "consumer-inflight-zero",
+        "pi-lock-zero",
+        "pi-root-zero",
+        "pi-leftmost-zero",
+        "pi-top-zero",
+        "stable-task-stack",
+        "stable-blocked-on",
+        "blocked-on-in-task-stack-window"
+      ],
+      "ordering": [
+        "f-pi-chain-unlock",
+        "pselect-overlay",
+        "consumer-inflight-zero",
+        "install-pipe-physrw",
+        "waiter-pi-cleanup",
+        "install-android-root",
+        "ashmem-fops-restore",
+        "a3-final-commit"
+      ]
+    }
+  },
+  "slide_route": {
+    "status": "exact-image-btf-rb-erase-verified-pending-runtime-rerun",
+    "feature_macro": "SLIDE_USE_RANDOM_UUID_LEAK",
+    "feature_value": 1,
+    "source": "random_table[5].data-to-nfulnl_logger-name",
+    "proc_path": "/proc/sys/kernel/random/uuid",
+    "random_table_offset": "0x02239320",
+    "random_table_entry_count": 7,
+    "ctl_table_size": "0x40",
+    "ctl_table_procname_offset": "0x0",
+    "ctl_table_data_offset": "0x8",
+    "ctl_table_maxlen_offset": "0x10",
+    "ctl_table_mode_offset": "0x14",
+    "ctl_table_handler_offset": "0x20",
+    "boot_id_entry_index": 4,
+    "boot_id_procname_rva": "0x015d2fc8",
+    "boot_id_data_slot_offset": "0x02239428",
+    "boot_id_data_initial": "0xffffffc082379ed8",
+    "uuid_entry_index": 5,
+    "uuid_procname_rva": "0x0160a351",
+    "uuid_data_slot_offset": "0x02239468",
+    "uuid_data_initial": "0x0",
+    "random_table_terminator_index": 6,
+    "proc_do_uuid_offset": "0x008b2bfc",
+    "proc_do_uuid_nonzero_guard_offset": "0x8",
+    "nf_logger_size": "0x20",
+    "nf_logger_name_field_offset": "0x0",
+    "nf_logger_type_field_offset": "0x8",
+    "nf_logger_logfn_field_offset": "0x10",
+    "nf_logger_me_field_offset": "0x18",
+    "nfulnl_logger_offset": "0x02112260",
+    "nfulnl_name_rva": "0x0160f939",
+    "nfulnl_type_qword_offset": "0x02112268",
+    "nfulnl_type_qword_initial": "0x1",
+    "nfulnl_logfn_offset": "0x00e5e878",
+    "rb_erase_offset": "0x01043eac",
+    "rb_collateral_offset_from_parent": "0x8",
+    "p0_page_offset": "0xffffff8000000000",
+    "p0_phys_offset": "0x80000000",
+    "p0_kernel_phys_load": "0xa8000000",
+    "p0_kernel_phys_delta": "0x28000000",
+    "nfulnl_direct_map_alias": "0xffffff802a112260",
+    "nfulnl_type_qword_direct_map_alias": "0xffffff802a112268",
+    "nfulnl_logfn_field_direct_map_alias": "0xffffff802a112270",
+    "uuid_data_direct_map_alias": "0xffffff802a239468",
+    "runtime_reads": 2,
+    "require_identical_reads": true,
+    "require_qword1_direct_map": true,
+    "expected_qword1": "0xffffff802a239468",
+    "endianness": "little",
+    "derive_stext": "qword0-minus-nfulnl-name-rva",
+    "fake_task_pi_root": "null",
+    "fake_task_pi_leftmost": "null",
+    "rb_cached_leftmost": "null-skip-rb_next",
+    "restore_contract": {
+      "uuid_data_before": "0xffffff802a112260",
+      "uuid_data_after": "0x0",
+      "nfulnl_type_qword_before": "0xffffff802a239468",
+      "nfulnl_type_qword_after": "0x1",
+      "nfulnl_logfn_expected_rva": "0x00e5e878",
+      "restore_order": [
+        "nfulnl_type_qword",
+        "uuid_data"
+      ],
+      "exact_readback_required": true,
+      "logfn_unchanged_readback_required": true,
+      "success_before_restore": false
+    }
+  },
+  "root_route": {
+    "preferred": "configfs-pipe-physrw-fcred-stop-pidfd-guardian-legit-commit-sealed-execveat",
+    "fallback": "disabled-in-release-until-kphys-runtime-readback",
+    "same_attempt_fallback_after_route_a": false,
+    "raw_workqueue_route_in_release": false,
+    "plat_sepolicy_cil_sha256": "8c2a6cb31d87d70efb3f98760704d8d3f17da32ce75704db27185f314044ac22",
+    "required_kernel_self_process_fork_allow": "(allow domain self (process (fork sigchld sigkill sigstop signull signal getsched setsched getsession getpgid getcap setcap getattr setrlimit)))",
+    "ashmem_misc_fops_offset": "0x0227c528"
+  },
+  "runtime_tuning": {
+    "status": "device-confirmed-working-exact-build",
+    "attempt_budget": 8,
+    "attempt_timeout_seconds": 180,
+    "environment_overrides": [
+      "PSELECT_DELAY_USEC",
+      "PSELECT_ROUTE_DELAY_USEC",
+      "FOPS_MAX_ATTEMPTS",
+      "GHOSTLOCK_KS_THRESHOLD",
+      "GHOSTLOCK_PHYS_LOAD"
+    ],
+    "copied_io_kicker": false
+  },
+  "runtime_support": {
+    "status": "maintainer-device-confirmed-working",
+    "scope": "exact-opd2415-16.0.9.400-ex01-build-only",
+    "note": "Historical pending/provisional labels elsewhere in this profile and its evidence files describe the capture state of those individual records."
+  }
+}

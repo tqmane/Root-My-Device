@@ -1,0 +1,35 @@
+{
+  "$comment": [
+    "Root My OnePlus Pad 3 exact-build registry.",
+    "The target directory is src/targets/<device>/<region>/<kernelRelease>.",
+    "All guard fields were read from the connected OPD2415 or its exact stock",
+    "boot.img; an OxygenOS update with a different full kernel release or",
+    "fingerprint must receive a separate profile before it can run."
+  ],
+  "schemaVersion": 1,
+  "targets": [
+    {
+      "profileId": "oneplus-pad3-ex-16.0.9.400",
+      "payload": "CVE-2026-43499",
+      "core": "core66",
+      "device": "oneplus-pad3",
+      "region": "EX",
+      "manufacturer": "OnePlus",
+      "model": "OPD2415",
+      "deviceProperty": "OP6190L1",
+      "product": "OPD2415IN",
+      "marketingName": "OnePlus Pad 3",
+      "soc": "Qualcomm SM8750P",
+      "kernelRelease": "6.6.118-android15-8-g2e6b9c3812c5-ab15114928-4k",
+      "kernelVersion": "Linux version 6.6.118-android15-8-g2e6b9c3812c5-ab15114928-4k (kleaf@build-host) (Android (11368308, +pgo, +bolt, +lto, +mlgo, based on r510928) clang version 18.0.0 (https://android.googlesource.com/toolchain/llvm-project 477610d4d0d988e69dbc3fae4fe86bff3f07f2b5), LLD 18.0.0) #1 SMP PREEMPT Mon Mar 30 10:41:25 UTC 2026",
+      "kernelBuildVersion": "#1 SMP PREEMPT Mon Mar 30 10:41:25 UTC 2026",
+      "buildDisplay": "OPD2415_16.0.9.400(EX01)",
+      "buildFingerprint": "OnePlus/OPD2415IN/OP6190L1:16/AP3A.240617.008/V.R4T3.17bf73d_cf42a1_c9913b:user/release-keys",
+      "securityPatch": "2026-07-01",
+      "sdk": 36,
+      "abi": "arm64-v8a",
+      "pageSize": 4096,
+      "status": "Maintainer device-verified on this exact build: temporary root, KernelSU 32525 late-load, signer-matched Manager grant, SELinux enforcing restoration, and the authenticated module/zygote/Vector completion flow work. Historical evidence files retain their capture-time provenance labels."
+    }
+  ]
+}

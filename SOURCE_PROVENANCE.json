@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "combinedRepository": {
+    "origin": "https://github.com/tqmane/Root-My-Device.git",
+    "note": "The combined main commit is a new integration commit; it is not either device repository's original HEAD."
+  },
+  "deviceSources": [
+    {
+      "path": "devices/nothing-phone-3a",
+      "repository": "https://github.com/tqmane/root-my-nothing.git",
+      "sourceCommit": "58df2d94cb907b589eef5f26f21f214a249c85b8"
+    },
+    {
+      "path": "devices/oneplus-pad-3",
+      "repository": "https://github.com/tqmane/root-my-oneplus",
+      "sourceCommit": "ff7294631fce27e5cf0a345346dc16bb04d2412b"
+    }
+  ],
+  "sharedSubmodules": [
+    {
+      "path": "src/kernelsu/KernelSU",
+      "repository": "https://github.com/tiann/KernelSU.git",
+      "commit": "b0bc817b4e966aa6aa830834eaf6ef765d821d40"
+    },
+    {
+      "path": "src/kernelsu/Root-My-Device-KSU",
+      "repository": "https://github.com/tqmane/Root-My-Device-KSU.git",
+      "commit": "bf5bfa9ba0e7430611cca4b55ab12885df2d4eaa"
+    }
+  ]
+}

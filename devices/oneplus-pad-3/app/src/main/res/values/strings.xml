@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Root My OnePlus Pad 3</string>
+    <string name="home">Home</string>
+    <string name="logs">Logs</string>
+    <string name="about">About</string>
+    <string name="root">Root</string>
+    <string name="retry">Try again</string>
+    <string name="reboot_required">Reboot required</string>
+    <string name="exploit_reboot_required">The kernel primitive was already entered in this boot. For safety, this app will not retry until the tablet has rebooted. Reboot, start Shizuku again, then reopen this app.</string>
+    <string name="refresh">Refresh</string>
+    <string name="copy_logs">Copy logs</string>
+    <string name="export_logs">Export logs</string>
+    <string name="open_manager">Open KernelSU Manager</string>
+    <string name="install_manager">Matching KernelSU Manager required</string>
+    <string name="modules_reboot_required">Module stages were not requested in this boot. Reboot, start Shizuku, then run Root My OnePlus Pad 3 again; modules must be started in the same initial late-load.</string>
+    <string name="modules_completion_unverified">KernelSU loaded, but this boot has no verified module-stage completion marker. Start Shizuku and tap Refresh. If it remains unverified, reboot and run Root My OnePlus Pad 3 again with the modules already installed.</string>
+    <string name="device_compatibility">Device compatibility</string>
+    <string name="exploit_status">Exploit status</string>
+    <string name="kernelsu_status">KernelSU status</string>
+    <string name="compatible">Compatible</string>
+    <string name="not_compatible">Not compatible</string>
+    <string name="active">Active</string>
+    <string name="not_loaded">Not loaded</string>
+    <string name="device">Device</string>
+    <string name="product">Product</string>
+    <string name="build">Build</string>
+    <string name="sdk">SDK</string>
+    <string name="security_patch">Security patch</string>
+    <string name="kernel">Kernel</string>
+    <string name="page_size">Page size</string>
+    <string name="target_exact">OPD2415 / OP6190L1 / 16.0.9.400(EX01) only</string>
+    <string name="target_guard">Root is disabled unless model, device, product, fingerprint, build, SDK, security patch, kernel, page size and ABI all match.</string>
+    <string name="warning">Start Shizuku and grant this app permission before running. This uses a kernel vulnerability; a miss may reboot the tablet. Root also starts installed Zygisk/Vector modules in the initial late-load, and the explicit module path restarts the Android framework once; this app may close during that restart.</string>
+    <string name="about_body">An offline one-button temporary-root, KernelSU late-load and Zygisk/Vector module-stage installer for the exact OnePlus Pad 3 OPD2415_16.0.9.400(EX01) firmware. It runs through Shizuku shell permission, never unlocks the bootloader or wipes data, and root disappears after reboot.</string>
+    <string name="no_logs">No run logs yet.</string>
+    <string name="logs_copied">Logs copied</string>
+    <string name="logs_exported">Logs exported</string>
+    <string name="manager_missing">The signer-matched Root My Device KSU Manager is not installed. Install the Manager APK produced with this build; a public Manager APK will not authenticate.</string>
+</resources>

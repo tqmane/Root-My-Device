@@ -1,0 +1,20 @@
+# Keep source and documentation reproducible across Windows and Unix hosts.
+* text=auto eol=lf
+*.bat text eol=crlf
+
+# Files that must never be line-ending converted.
+*.apk binary
+*.der binary
+*.img binary
+*.jar binary
+*.jks binary
+*.keystore binary
+*.ko binary
+*.p12 binary
+*.pfx binary
+*.so binary
+**/app/src/main/assets/cve-2026-43499-standalone binary
+**/app/src/main/assets/ksud-* binary
+
+# Unified-diff context lines may consist of one required leading space.
+*.patch whitespace=-blank-at-eol

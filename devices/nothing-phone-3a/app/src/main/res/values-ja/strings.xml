@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Root My Nothing</string>
+    <string name="home">ホーム</string>
+    <string name="logs">ログ</string>
+    <string name="about">このアプリについて</string>
+    <string name="root">Root を実行</string>
+    <string name="retry">再試行</string>
+    <string name="refresh">更新</string>
+    <string name="copy_logs">ログをコピー</string>
+    <string name="export_logs">ログを書き出す</string>
+    <string name="open_manager">KernelSU Manager を開く</string>
+    <string name="install_manager">対応する KernelSU Manager が必要</string>
+    <string name="start_module_stages">モジュール stage を開始</string>
+    <string name="retry_module_stages">モジュール stage を再試行</string>
+    <string name="modules_reboot_required">この起動ではモジュール stage が要求されていません。Shizuku を起動して「モジュール stage を開始」を押すと、exploit をやり直さずに続行できます。</string>
+    <string name="modules_completion_unverified">KernelSU はロード済みですが、この起動で module stage の完了マーカーを確認できていません。Shizuku を起動して「モジュール stage を再試行」を押してください。この再試行は KernelSU の su -M を直接使い、temporary-root helper には依存しません。</string>
+    <string name="device_compatibility">デバイス互換性</string>
+    <string name="exploit_status">Exploit の状態</string>
+    <string name="kernelsu_status">KernelSU の状態</string>
+    <string name="compatible">互換性あり</string>
+    <string name="not_compatible">対象外</string>
+    <string name="active">有効</string>
+    <string name="not_loaded">未ロード</string>
+    <string name="device">デバイス</string>
+    <string name="build">ビルド</string>
+    <string name="sdk">SDK</string>
+    <string name="security_patch">セキュリティパッチ</string>
+    <string name="kernel">カーネル</string>
+    <string name="page_size">ページサイズ</string>
+    <string name="target_exact">A059 / Asteroids / B4.1-260618-1048 専用</string>
+    <string name="target_guard">モデル・デバイス・fingerprint・ビルド・SDK・セキュリティパッチ・カーネル・ページサイズ・ABI が完全一致しない限り Root は実行できません。</string>
+    <string name="warning">先にShizukuを起動し、このアプリを許可してください。カーネル脆弱性の失敗時には端末が再起動する場合があります。Root実行時はインストール済みZygisk/Vectorモジュールも最初のlate-loadで起動するため、明示的なmodule pathではAndroid frameworkを1回再起動します。その途中でこのアプリが閉じる場合があります。</string>
+    <string name="about_body">Nothing Phone (3a) A059 Asteroids B4.1-260618-1048 専用の、オフライン一ボタン temporary root / KernelSU late-load / Zygisk・Vector module-stage インストーラーです。Shizukuのshell権限で実行し、ブートローダーを解除せず、データも消去しません。rootは再起動すると消えます。</string>
+    <string name="no_logs">実行ログはまだありません。</string>
+    <string name="logs_copied">ログをコピーしました</string>
+    <string name="logs_exported">ログを書き出しました</string>
+    <string name="manager_missing">同じ native build で生成・署名された Root My Device KSU Manager が必要です。別の証明書で署名された Manager は認証されません。</string>
+</resources>

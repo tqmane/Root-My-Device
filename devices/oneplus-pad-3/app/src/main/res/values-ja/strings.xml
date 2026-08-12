@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Root My OnePlus Pad 3</string>
+    <string name="home">ホーム</string>
+    <string name="logs">ログ</string>
+    <string name="about">このアプリについて</string>
+    <string name="root">Root を実行</string>
+    <string name="retry">再試行</string>
+    <string name="reboot_required">再起動が必要</string>
+    <string name="exploit_reboot_required">この起動ではすでにカーネルprimitiveへ到達しています。安全のため、タブレットを再起動するまで再試行しません。再起動後にShizukuを起動し、このアプリを開き直してください。</string>
+    <string name="refresh">更新</string>
+    <string name="copy_logs">ログをコピー</string>
+    <string name="export_logs">ログを書き出す</string>
+    <string name="open_manager">KernelSU Manager を開く</string>
+    <string name="install_manager">対応する署名済み KernelSU Manager が必要</string>
+    <string name="modules_reboot_required">この起動ではモジュールstageが要求されていません。再起動してShizukuを起動後、Root My OnePlus Pad 3をもう一度実行してください。モジュールは最初のlate-loadと同時に起動する必要があります。</string>
+    <string name="modules_completion_unverified">KernelSU はロード済みですが、この起動で module stage の完了マーカーを確認できていません。Shizuku を起動して「更新」を押してください。それでも未確認なら、モジュールをインストールした状態で再起動し、Root My OnePlus Pad 3 をもう一度実行してください。</string>
+    <string name="device_compatibility">デバイス互換性</string>
+    <string name="exploit_status">Exploit の状態</string>
+    <string name="kernelsu_status">KernelSU の状態</string>
+    <string name="compatible">互換性あり</string>
+    <string name="not_compatible">対象外</string>
+    <string name="active">有効</string>
+    <string name="not_loaded">未ロード</string>
+    <string name="device">デバイス</string>
+    <string name="product">プロダクト</string>
+    <string name="build">ビルド</string>
+    <string name="sdk">SDK</string>
+    <string name="security_patch">セキュリティパッチ</string>
+    <string name="kernel">カーネル</string>
+    <string name="page_size">ページサイズ</string>
+    <string name="target_exact">OPD2415 / OP6190L1 / 16.0.9.400(EX01) 専用</string>
+    <string name="target_guard">モデル・デバイス・プロダクト・fingerprint・ビルド・SDK・セキュリティパッチ・カーネル・ページサイズ・ABI が完全一致しない限り Root は実行できません。</string>
+    <string name="warning">先にShizukuを起動し、このアプリを許可してください。カーネル脆弱性の失敗時にはタブレットが再起動する場合があります。Root実行時はインストール済みZygisk/Vectorモジュールも最初のlate-loadで起動するため、明示的なmodule pathではAndroid frameworkを1回再起動します。その途中でこのアプリが閉じる場合があります。</string>
+    <string name="about_body">OnePlus Pad 3 OPD2415_16.0.9.400(EX01) 専用の、オフライン一ボタン temporary root / KernelSU late-load / Zygisk・Vector module-stage インストーラーです。Shizukuのshell権限で実行し、ブートローダーを解除せず、データも消去しません。rootは再起動すると消えます。</string>
+    <string name="no_logs">実行ログはまだありません。</string>
+    <string name="logs_copied">ログをコピーしました</string>
+    <string name="logs_exported">ログを書き出しました</string>
+    <string name="manager_missing">このビルドと同じ署名の Root My Device KSU Manager がインストールされていません。公開版ではなく、このビルドが生成した Manager APK をインストールしてください。</string>
+</resources>

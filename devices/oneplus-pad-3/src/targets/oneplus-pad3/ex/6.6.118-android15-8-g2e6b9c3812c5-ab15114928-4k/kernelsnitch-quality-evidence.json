@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "target_id": "oneplus-pad3-ex-16.0.9.400",
+  "counter": "cntvct_el0",
+  "counter_rate": "architected-fixed-rate-but-measured-latency-remains-dvfs-sensitive",
+  "metric": "minimum accepted KernelSnitch collision traversal time",
+  "policy": "diagnostic-only-no-route-gate",
+  "observations": {
+    "fops_route_hits": [
+      {"run": "v6", "accept_min": 14139},
+      {"run": "v8", "accept_min": 13118},
+      {"run": "v9", "accept_min": 13665},
+      {"run": "v11", "accept_min": 12792},
+      {"run": "v12-d", "accept_min": 13737},
+      {"run": "v13b", "accept_min": 13201},
+      {"run": "final-lateload", "accept_min": 13519},
+      {"run": "final-lateload-v3", "accept_min": 11027}
+    ],
+    "fops_route_misses": [
+      {"run": "v12-a", "accept_min": 9536},
+      {"run": "v12-b", "accept_min": 7124},
+      {"run": "v12-c", "accept_min": 9970},
+      {"run": "final-lateload-v2", "accept_min": 10512},
+      {"run": "app-shizuku-attempt1", "accept_min": 6909, "accept_max": 7536},
+      {"run": "final-0010", "accept_min": 7076, "accept_max": 7200},
+      {"run": "three-group-ready-barrier-1", "accept_min": 7609, "accept_max": 7652},
+      {"run": "three-group-ready-barrier-2", "accept_min": 7450, "accept_max": 7562}
+    ],
+    "app_shizuku_slide_canary": {
+      "accept_min": 6647,
+      "accept_max": 7079,
+      "subsequent_fops_result": "route-miss"
+    },
+    "clean_app_slide_diagnostics": {
+      "accept_min": [7423, 7448, 7561, 7536, 7620, 7480, 7490, 7635],
+      "baseline_range": [7, 9],
+      "reject_max_range": [9, 10],
+      "fops_stage_observed": false,
+      "dirty_marker_published": false
+    },
+    "final_0010_paired_stages": {
+      "slide_accept_min": 7145,
+      "slide_accept_max": 7205,
+      "slide_result": "success",
+      "fops_accept_min": 7076,
+      "fops_accept_max": 7200,
+      "fops_result": "route-miss",
+      "fops_mm_slot": 17,
+      "reclaim_sends": 12,
+      "head_guard_free_heads": 4
+    }
+  },
+  "fops_stage_descriptive_separation": {
+    "minimum_hit": 11027,
+    "maximum_miss": 10512,
+    "gap": 515,
+    "not_a_slide_classifier": true,
+    "not_a_route_gate": true,
+    "reason": "timing remains diagnostic-only; allocator geometry is selected by route outcomes, with four-send at three hits in three observations versus one hit and multiple misses for twelve-send"
+  },
+  "stage_mismatch": {
+    "historical_classifier_stage": "fops-page-preparation",
+    "implemented_observation_stage": "slide-page-preparation",
+    "paired_slide_outcome_dataset": false,
+    "normalization_validates_collision_only": true,
+    "route_decision_supported": false
+  },
+  "waiter_pile_hardening": {
+    "previous_behavior": "pthread-create-4096-followed-by-two-sched-yield-calls",
+    "gap": "the parent did not prove every worker reached the point immediately before FUTEX_WAIT, so collision traversal timing could observe an underfilled pile",
+    "new_behavior": "every worker release-publishes readiness immediately before FUTEX_WAIT; the parent acquire-waits for exactly 4096 under a monotonic deadline and yields once on inherited CPU0 before scanning",
+    "timeout_ms": 10000,
+    "failure_policy": "set-collisions-not-found-and-exit-child-cleanly",
+    "route_threshold": false,
+    "runtime_status": "pending-exact-device-rerun"
+  },
+  "leak_child_start_hardening": {
+    "observed_gap": "clone_leak_child began KernelSnitch and its 4096 pthread startup concurrently with the parent post25 clone and later mm pin sequence",
+    "allocator_effect": "the intended pre24-leak-post25 exclusive mm_struct ownership window was scheduler-interleavable before the target slab peers were pinned",
+    "new_sequence": "pre24-clone, leak-child-clone-and-confirm-parked, post25-clone, pin-all-pre-leak-post-memfds, release-leak-child-to-KernelSnitch",
+    "failure_policy": "bounded-shared-futex-barrier-failure-aborts-clean-before-dirty-publication",
+    "runtime_status": "pending-exact-device-rerun"
+  },
+  "conclusion": "retain-per-stage-statistics-without-a-route-threshold-and-enforce-proven-four-send-head-waiter-ready-and-leak-child-start-barriers"
+}
