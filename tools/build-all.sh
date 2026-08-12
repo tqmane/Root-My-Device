@@ -205,8 +205,8 @@ for spec in \
   }
 done
 
-nothing_command=("$REPOSITORY_ROOT/devices/nothing-phone-3a/tools/build-asteroids-fixed.sh" --release)
-oneplus_command=("$REPOSITORY_ROOT/devices/oneplus-pad-3/tools/build-oneplus-pad3.sh" --release)
+nothing_command=(bash "$REPOSITORY_ROOT/devices/nothing-phone-3a/tools/build-asteroids-fixed.sh" --release)
+oneplus_command=(bash "$REPOSITORY_ROOT/devices/oneplus-pad-3/tools/build-oneplus-pad3.sh" --release)
 if [ "$VERIFY_ONEPLUS" -eq 1 ]; then
   if [ -n "$ONEPLUS_SERIAL" ]; then
     oneplus_command+=(--serial "$ONEPLUS_SERIAL")

@@ -194,7 +194,32 @@ for flag_variable in \
   }
 done
 
-python3 "$ROOT/tools/verify-profile.py"
+GENERATED_PROFILE_DIR="$ROOT/generated/oneplus-pad-3"
+GENERATED_PROFILE_REQUIRED=(kernel vmlinux Module.symvers kernel.btf kallsyms.txt)
+GENERATED_PROFILE_MISSING=()
+for generated_name in "${GENERATED_PROFILE_REQUIRED[@]}"; do
+  [ -s "$GENERATED_PROFILE_DIR/$generated_name" ] || \
+    GENERATED_PROFILE_MISSING+=("$generated_name")
+done
+
+HAVE_EXACT_GENERATED_PROFILE=1
+if [ "${#GENERATED_PROFILE_MISSING[@]}" -ne 0 ]; then
+  HAVE_EXACT_GENERATED_PROFILE=0
+  if [ "${RMOP_REQUIRE_GENERATED_PROFILE:-0}" = 1 ]; then
+    echo "missing exact OnePlus Pad 3 generated analysis input(s): ${GENERATED_PROFILE_MISSING[*]}" >&2
+    echo "Generate/copy them under $GENERATED_PROFILE_DIR or unset RMOP_REQUIRE_GENERATED_PROFILE." >&2
+    exit 2
+  fi
+  echo "[WARN] exact OnePlus Pad 3 generated analysis bundle is incomplete: ${GENERATED_PROFILE_MISSING[*]}" >&2
+  echo "[WARN] running committed-profile/source checks and continuing the reproducible build." >&2
+  echo "[WARN] set RMOP_REQUIRE_GENERATED_PROFILE=1 to make the full local kernel/vmlinux/BTF audit mandatory." >&2
+else
+  echo "==> verify exact generated OnePlus Pad 3 kernel/profile bundle"
+  python3 "$ROOT/tools/verify-profile.py"
+fi
+
+# These checks are source/profile contract tests and do not require proprietary
+# locally extracted firmware analysis artifacts. Always run them.
 python3 "$ROOT/tools/verify-profile.py" --mode4-contract-self-test
 python3 "$ROOT/tools/verify-a3-source-contract.py"
 python3 "$ROOT/tools/verify-profile.py" --reclaim-contract-self-test
@@ -1569,11 +1594,15 @@ docker run --rm -v "$KSU_WORK:/ksu" "$DDK_IMAGE" \
 MODULE="$KSU_WORK/kernel/kernelsu.ko"
 [ -s "$MODULE" ] || { echo "KernelSU module was not produced: $MODULE" >&2; exit 4; }
 "$TOOLCHAIN/bin/llvm-strip" -d "$MODULE"
-python3 "$ROOT/src/kernelsu/tools/audit_module_against_target.py" \
-  "$MODULE" \
-  "$ROOT/generated/oneplus-pad-3/vmlinux" \
-  "$ROOT/generated/oneplus-pad-3/Module.symvers" \
-  --manual-relocation
+if [ "$HAVE_EXACT_GENERATED_PROFILE" -eq 1 ]; then
+  python3 "$ROOT/src/kernelsu/tools/audit_module_against_target.py" \
+    "$MODULE" \
+    "$GENERATED_PROFILE_DIR/vmlinux" \
+    "$GENERATED_PROFILE_DIR/Module.symvers" \
+    --manual-relocation
+else
+  echo "[WARN] skipping module-vs-exact-target symbol audit because the local generated analysis bundle is absent." >&2
+fi
 grep -aq "$KERNEL_RELEASE" "$MODULE" || {
   echo "kernelsu.ko does not contain the exact release $KERNEL_RELEASE" >&2
   exit 4

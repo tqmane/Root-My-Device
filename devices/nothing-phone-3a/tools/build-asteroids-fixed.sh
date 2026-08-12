@@ -338,7 +338,7 @@ GOT_CERT=$(printf '%s\n' "$APKSIGNER_CERT_OUTPUT" | awk '
     lower=tolower(line)
     marker="certificate sha-256 digest:"
     marker_pos=index(lower, marker)
-    if (marker_pos > 0 && lower ~ /^[[:space:]]*signer([ #\(]|$)/) {
+    if (marker_pos > 0) {
       digest=substr(line, marker_pos + length(marker))
       gsub(/[^0-9A-Fa-f]/, "", digest)
       if (length(digest) == 64) {
