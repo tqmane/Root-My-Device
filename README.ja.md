@@ -1,6 +1,6 @@
 # Root My Device
 
-[English](README.md) · [セキュリティ方針](SECURITY.md) · [公開手順](PUBLISHING.ja.md)
+[English](README.md) · [セキュリティ方針](SECURITY.md)
 
 Root My Deviceは、次の2台向けの **exact-build専用** temporary root → KernelSU
 late-load projectを1つにまとめた公開用monorepoです。
@@ -167,9 +167,7 @@ Gradle artifactが必要です。
 ## Privacyと公開
 
 Keystore、password、private key、local absolute path、device serial、account identifier、
-未sanitiseのlog・bugreportを公開しないでください。Push前に
-[PUBLISHING.ja.md](PUBLISHING.ja.md)を確認してください。Exactな`bf5bfa9…`を維持すると、
-そのcommit固有のGit metadataも維持されます。Metadataを書き換えるとhashも変わります。
+未sanitiseのlog・bugreportを公開しないでください。
 
 ## License / Credits
 

@@ -1,6 +1,6 @@
 # Root My Device
 
-[日本語](README.ja.md) · [Security policy](SECURITY.md) · [Publishing notes](PUBLISHING.md)
+[日本語](README.ja.md) · [Security policy](SECURITY.md) 
 
 Root My Device is a public monorepo for two **exact-build**, temporary-root →
 KernelSU late-load projects:
@@ -190,10 +190,7 @@ artifacts.
 ## Privacy and publishing
 
 Do not publish keystores, passwords, private keys, local absolute paths, device
-serial numbers, account identifiers, unsanitized logs, or bugreports. Read
-[PUBLISHING.md](PUBLISHING.md) before pushing. Retaining the exact
-`bf5bfa9…` submodule commit also retains that commit's original Git metadata;
-rewriting it would necessarily change the hash.
+serial numbers, account identifiers, unsanitized logs, or bugreports.
 
 ## Credits and licensing
 
