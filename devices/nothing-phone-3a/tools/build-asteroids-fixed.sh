@@ -380,10 +380,10 @@ if [ "$APP_RELEASE" -eq 1 ]; then
   : "${RMN_KEY_ALIAS:?Set RMN_KEY_ALIAS for --release}"
   : "${RMN_STORE_PASSWORD:?Set RMN_STORE_PASSWORD for --release}"
   : "${RMN_KEY_PASSWORD:?Set RMN_KEY_PASSWORD for --release}"
-  ./gradlew :app:assembleRelease
+  ./gradlew --no-daemon --no-configuration-cache :app:assembleRelease
   APP_APK="$ROOT/app/build/outputs/apk/release/app-release.apk"
 else
-  ./gradlew :app:assembleDebug
+  ./gradlew --no-daemon --no-configuration-cache :app:assembleDebug
   APP_APK="$ROOT/app/build/outputs/apk/debug/app-debug.apk"
 fi
 

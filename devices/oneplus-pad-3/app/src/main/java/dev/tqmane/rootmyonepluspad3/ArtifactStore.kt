@@ -27,17 +27,17 @@ object ArtifactStore {
         source = "cve-2026-43499-standalone",
         destination = "cve-2026-43499-standalone",
         size = 177_840,
-        sha256 = "62f1573e8cdf150059c412769f67467e9ac55623220f3fa4007a7adb1943b855",
+        sha256 = "17976f8f85fd406b189211ac42f65109782c6939f288f6a21340d51b08129037",
     )
     private val ksud = Asset(
         source = "ksud-oneplus-pad3",
         destination = "ksud-oneplus-pad3",
-        size = 4_902_304,
-        sha256 = "591a59b86c636e6063f8b3dc57574477caddcc47d1a1774ce828e8846698d9a9",
+        size = 4_902_048,
+        sha256 = "e6af2b19094a4a974d110a54637c876753bdfd0c923305197cdf6f91135d5094",
     )
     private const val HELPER_SIZE = 60_824L
     private const val HELPER_SHA256 =
-        "5c208d302784e92611d0408e70409657566e2d739335688a3cff68c088957151"
+        "7af718a609c12b7175c85d95e56ecff4b59b4e1e0c79d186d3b761186a366f35"
 
     fun prepare(context: Context, log: (String) -> Unit): RuntimeArtifacts {
         val directory = File(context.filesDir, "runtime").apply {

@@ -31,8 +31,8 @@ object ArtifactStore {
     private val ksud = Asset(
         source = "ksud-asteroids",
         destination = "ksud-asteroids",
-        size = 4_767_584,
-        sha256 = "c0e3be4a928668a5f58ea32564f2faf8b7d1dc5899fdafc51b3036bb877acc0f",
+        size = 4_767_456,
+        sha256 = "71c6740eeba7a3af120de69abe5e97a039da96f653ecf7919956cb621f45b44d",
     )
     private const val HELPER_SIZE = 29_968L
     private const val HELPER_SHA256 =
