@@ -40,7 +40,7 @@ Optional read-only target verification:
 
 ## 2. Install both APKs
 
-Install `app-release.apk` and the `RootMyDeviceKSU_32525_OnePlusPad3.apk`
+Install `app-release.apk` and the `RootMyDeviceKSU_32601_OnePlusPad3.apk`
 produced by the same run.
 
 ## 3. Start Shizuku

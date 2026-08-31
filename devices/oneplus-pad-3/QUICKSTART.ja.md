@@ -40,7 +40,7 @@ Read-onlyのtarget確認:
 
 ## 2. 2つのAPKをinstall
 
-同じrunが生成した`app-release.apk`と`RootMyDeviceKSU_32525_OnePlusPad3.apk`をinstallします。
+同じrunが生成した`app-release.apk`と`RootMyDeviceKSU_32601_OnePlusPad3.apk`をinstallします。
 
 ## 3. Shizukuを起動
 

@@ -1,0 +1,167 @@
+name: build-and-release-apks
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Release tag (blank = rmd-YYYYMMDD-<sha>)'
+        required: false
+        type: string
+      prerelease:
+        description: 'Publish as a prerelease'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    env:
+      ROOT_MY_DEVICE_KEY_ALIAS: ${{ secrets.ROOT_MY_DEVICE_KEY_ALIAS }}
+      ROOT_MY_DEVICE_STORE_PASSWORD: ${{ secrets.ROOT_MY_DEVICE_STORE_PASSWORD }}
+      ROOT_MY_DEVICE_KEY_PASSWORD: ${{ secrets.ROOT_MY_DEVICE_KEY_PASSWORD }}
+
+    steps:
+      - name: Check out source and pinned submodules
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Verify release secrets
+        env:
+          ROOT_MY_DEVICE_KEYSTORE_B64: ${{ secrets.ROOT_MY_DEVICE_KEYSTORE_B64 }}
+        run: |
+          set -euo pipefail
+          for name in \
+            ROOT_MY_DEVICE_KEYSTORE_B64 \
+            ROOT_MY_DEVICE_KEY_ALIAS \
+            ROOT_MY_DEVICE_STORE_PASSWORD; do
+            [ -n "${!name:-}" ] || {
+              echo "::error::Missing Actions secret: $name"
+              exit 2
+            }
+          done
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK and host build dependencies
+        run: |
+          set -euo pipefail
+          sdkmanager \
+            'platforms;android-37' \
+            'build-tools;37.0.0' \
+            'ndk;29.0.14206865'
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            bpftool \
+            build-essential \
+            clang \
+            libelf-dev \
+            llvm
+
+      - name: Set up Gradle cache
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Materialize release signing key
+        env:
+          ROOT_MY_DEVICE_KEYSTORE_B64: ${{ secrets.ROOT_MY_DEVICE_KEYSTORE_B64 }}
+        run: |
+          set -euo pipefail
+          signing_dir="$RUNNER_TEMP/root-my-device-signing"
+          install -d -m 700 "$signing_dir"
+          keystore="$signing_dir/release-keystore"
+          printf '%s' "$ROOT_MY_DEVICE_KEYSTORE_B64" | base64 --decode > "$keystore"
+          chmod 600 "$keystore"
+          [ -s "$keystore" ] || { echo '::error::Decoded keystore is empty'; exit 2; }
+          key_password=${ROOT_MY_DEVICE_KEY_PASSWORD:-$ROOT_MY_DEVICE_STORE_PASSWORD}
+          echo "ROOT_MY_DEVICE_KEYSTORE=$keystore" >> "$GITHUB_ENV"
+          echo "ROOT_MY_DEVICE_KEY_PASSWORD=$key_password" >> "$GITHUB_ENV"
+
+      - name: Validate public tree
+        run: |
+          set -euo pipefail
+          python3 tools/audit-public-tree.py
+          make syntax
+          make artifacts
+          make contracts
+
+      - name: Build and stage both release sets
+        env:
+          RMD_CI_PRUNE_DOCKER: '1'
+        run: make release
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: root-my-device-release-${{ github.sha }}
+          path: dist/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Resolve release tag
+        id: release_tag
+        env:
+          INPUT_TAG: ${{ inputs.tag_name }}
+        run: |
+          set -euo pipefail
+          if [ "$GITHUB_REF_TYPE" = tag ]; then
+            tag="$GITHUB_REF_NAME"
+          elif [ -n "${INPUT_TAG:-}" ]; then
+            tag="$INPUT_TAG"
+          else
+            tag="rmd-$(date -u +%Y%m%d)-${GITHUB_SHA:0:7}"
+          fi
+          case "$tag" in
+            *[!A-Za-z0-9._+-]*) echo "::error::Unsafe release tag: $tag"; exit 2 ;;
+          esac
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.release_tag.outputs.tag }}
+          INPUT_PRERELEASE: ${{ inputs.prerelease }}
+        run: |
+          set -euo pipefail
+          prerelease=0
+          if [ "${INPUT_PRERELEASE:-false}" = true ]; then
+            prerelease=1
+          else
+            case "$TAG" in
+              *-alpha*|*-beta*|*-rc*) prerelease=1 ;;
+            esac
+          fi
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" dist/* --clobber
+            exit 0
+          fi
+
+          args=(
+            release create "$TAG"
+            dist/*
+            --target "$GITHUB_SHA"
+            --title "Root My Device $TAG"
+            --generate-notes
+          )
+          [ "$prerelease" -eq 0 ] || args+=(--prerelease)
+          gh "${args[@]}"

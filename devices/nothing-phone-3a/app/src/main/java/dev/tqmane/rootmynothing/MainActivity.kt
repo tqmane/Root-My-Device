@@ -364,11 +364,11 @@ private fun StatusHero(state: RootUiState) {
                 )
                 Text(
                     if (success && state.moduleStagesCompleted) {
-                        "KernelSU 32525 · module stages complete"
+                        "KernelSU 32601 · module stages complete"
                     } else if (success && state.modulesRequested) {
-                        "KernelSU 32525 · module completion unverified"
+                        "KernelSU 32601 · module completion unverified"
                     } else if (success) {
-                        "KernelSU 32525 · UAPI 2 · late-load"
+                        "KernelSU 32601 · UAPI 2 · late-load"
                     } else {
                         "CVE-2026-43499 · temporary root"
                     },
@@ -553,7 +553,7 @@ private fun AboutScreen(modifier: Modifier = Modifier) {
             stringResource(R.string.target_guard),
             false,
         )
-        Text("Payload: CVE-2026-43499 core61\nKernelSU: 32525 (v3.2.5)\nKMI: android14-6.1\nLicense: Apache-2.0 / KernelSU components under their upstream licenses")
+        Text("Payload: CVE-2026-43499 core61\nKernelSU: 32601 (v3.3.0)\nKMI: android14-6.1\nLicense: Apache-2.0 / KernelSU components under their upstream licenses")
     }
 }
 

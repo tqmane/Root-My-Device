@@ -20,12 +20,12 @@
     {
       "path": "src/kernelsu/KernelSU",
       "repository": "https://github.com/tiann/KernelSU.git",
-      "commit": "b0bc817b4e966aa6aa830834eaf6ef765d821d40"
+      "commit": "932014ab5b2c9b74a3d11e2ec4d17dd10fc9442e"
     },
     {
       "path": "src/kernelsu/Root-My-Device-KSU",
       "repository": "https://github.com/tqmane/Root-My-Device-KSU.git",
-      "commit": "bf5bfa9ba0e7430611cca4b55ab12885df2d4eaa"
+      "commit": "tracked-gitlink"
     }
   ]
 }

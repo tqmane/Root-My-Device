@@ -15,9 +15,8 @@ fi
 TARGET='asteroids/jp/6.1.157-android14-11-g82d681c9b06b-ab14634535'
 TARGET_SLUG='asteroids_jp_6.1.157-android14-11-g82d681c9b06b-ab14634535'
 CORE='core61'
-KSU_PIN='b0bc817b4e966aa6aa830834eaf6ef765d821d40'
-RMD_PATCH_PIN='bf5bfa9ba0e7430611cca4b55ab12885df2d4eaa'
-KSU_VERSION='32525'
+KSU_PIN='932014ab5b2c9b74a3d11e2ec4d17dd10fc9442e'
+KSU_VERSION='32601'
 KMI='android14-6.1'
 KERNEL_RELEASE='6.1.157-android14-11-g82d681c9b06b-ab14634535'
 DDK_IMAGE='ghcr.io/ylarod/ddk-min:android14-6.1-20260313'
@@ -182,12 +181,14 @@ echo "==> Manager signer: size=$MANAGER_CERT_SIZE ($MANAGER_CERT_SIZE_DEC) sha25
   echo "missing Nothing Phone (3a) device patches: $RMD/patches/$KSU_VERSION/devices/asteroids" >&2
   exit 2
 }
+RMD_PATCH_COMMIT='untracked-source'
 if git -C "$RMD" rev-parse --git-dir >/dev/null 2>&1; then
-  actual_rmd_patch_pin=$(git -C "$RMD" rev-parse HEAD)
-  [ "$actual_rmd_patch_pin" = "$RMD_PATCH_PIN" ] || {
-    echo "Root-My-Device-KSU pin mismatch: $actual_rmd_patch_pin != $RMD_PATCH_PIN" >&2
+  RMD_PATCH_COMMIT=$(git -C "$RMD" rev-parse HEAD)
+  [ -z "$(git -C "$RMD" status --porcelain --untracked-files=all)" ] || {
+    echo "Root-My-Device-KSU submodule is dirty; commit/pin the 32601 port before release builds" >&2
     exit 2
   }
+  echo "==> Root-My-Device-KSU: $RMD_PATCH_COMMIT"
 fi
 
 rm -rf "$KSU_WORK"
@@ -289,6 +290,8 @@ PROPS
   ./gradlew clean assembleRelease \
     -PKSU_PACKAGE_NAME="$MANAGER_PACKAGE" -PKSU_NAME="$MANAGER_NAME"
 )
+rm -rf "$WORK/manager-dist"
+mkdir -p "$WORK/manager-dist"
 python3 "$KSU_WORK/repack_apk.py" repack \
   -b release -t release -a arm64-v8a \
   -K "$MANAGER_KEYSTORE" -A "$MANAGER_KEY_ALIAS" \
@@ -387,6 +390,29 @@ else
   APP_APK="$ROOT/app/build/outputs/apk/debug/app-debug.apk"
 fi
 
+if [ "$APP_RELEASE" -eq 1 ]; then
+  "$APKSIGNER" verify --verbose "$APP_APK" >/dev/null
+fi
+
+APP_HASH=$(sha256sum "$APP_APK" | awk '{print $1}')
+MANAGER_APK_HASH=$(sha256sum "$MANAGER_APK" | awk '{print $1}')
+KSUD_HASH=$(sha256sum "$WORK/ksud-asteroids" | awk '{print $1}')
+MODULE_HASH=$(sha256sum "$KSU_WORK/kernel/kernelsu.ko" | awk '{print $1}')
+MANIFEST="$WORK/build-manifest.txt"
+printf '%s\n' \
+  "target=$TARGET" \
+  "kernel_release=$KERNEL_RELEASE" \
+  "kmi=$KMI" \
+  "ksu_pin=$KSU_PIN" \
+  "ksu_version=$KSU_VERSION" \
+  "rmd_patch_commit=$RMD_PATCH_COMMIT" \
+  "manager_certificate_size=$MANAGER_CERT_SIZE_DEC" \
+  "manager_certificate_sha256=$MANAGER_CERT_HASH" \
+  "kernelsu=$MODULE_HASH $KSU_WORK/kernel/kernelsu.ko" \
+  "ksud=$KSUD_HASH $WORK/ksud-asteroids" \
+  "manager_apk=$MANAGER_APK_HASH $MANAGER_APK" \
+  "app_apk=$APP_HASH $APP_APK" > "$MANIFEST"
+
 cat <<DONE
 
 Build complete.
@@ -394,6 +420,7 @@ Root My Nothing: $APP_APK
 Root My Device KSU: $MANAGER_APK
 ksud:  $WORK/ksud-asteroids
 ko:    $KSU_WORK/kernel/kernelsu.ko
+manifest: $MANIFEST
 Manager signer SHA-256: $MANAGER_CERT_HASH
 Manager signer DER size: $MANAGER_CERT_SIZE_DEC
 DONE

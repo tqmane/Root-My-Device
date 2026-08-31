@@ -14,10 +14,13 @@ from typing import Iterable
 
 ROOT = Path(__file__).resolve().parents[1]
 
-EXPECTED_ORIGIN = "https://github.com/tqmane/Root-My-Device.git"
-EXPECTED_SUBMODULES = {
-    Path("src/kernelsu/KernelSU"): "b0bc817b4e966aa6aa830834eaf6ef765d821d40",
-    Path("src/kernelsu/Root-My-Device-KSU"): "bf5bfa9ba0e7430611cca4b55ab12885df2d4eaa",
+EXPECTED_ORIGIN = "https://github.com/tqmane/Root-My-Device"
+PINNED_SUBMODULES = {
+    Path("src/kernelsu/KernelSU"): "932014ab5b2c9b74a3d11e2ec4d17dd10fc9442e",
+}
+REQUIRED_SUBMODULE_PATHS = {
+    Path("src/kernelsu/KernelSU"),
+    Path("src/kernelsu/Root-My-Device-KSU"),
 }
 EXPECTED_SUBMODULE_URLS = {
     Path("src/kernelsu/KernelSU"): "https://github.com/tiann/KernelSU.git",
@@ -138,6 +141,11 @@ BINARY_SUFFIXES = {
     *CREDENTIAL_SUFFIXES,
 }
 CRLF_ALLOWED_SUFFIXES = {".bat"}
+
+
+def normalize_git_url(value: str) -> str:
+    value = value.strip().rstrip("/")
+    return value[:-4] if value.endswith(".git") else value
 
 
 def run_at(repo: Path, *args: str, text: bool = True) -> subprocess.CompletedProcess:
@@ -284,16 +292,16 @@ def audit_submodule_worktree(
     if relative.name == "Root-My-Device-KSU":
         common = [
             child for _mode, _oid, child in entries
-            if child.parent == Path("patches/32525/common") and child.suffix == ".patch"
+            if child.parent == Path("patches/32601/common") and child.suffix == ".patch"
         ]
         asteroids = [
             child for _mode, _oid, child in entries
-            if child.parent == Path("patches/32525/devices/asteroids")
+            if child.parent == Path("patches/32601/devices/asteroids")
             and child.suffix == ".patch"
         ]
         oneplus = [
             child for _mode, _oid, child in entries
-            if child.parent == Path("patches/32525/devices/oneplus-pad3")
+            if child.parent == Path("patches/32601/devices/oneplus-pad3")
             and child.suffix == ".patch"
         ]
         expected_counts = {"common": 6, "asteroids": 3, "oneplus-pad3": 13}
@@ -308,10 +316,10 @@ def audit_submodule_worktree(
                 f"{actual_counts} != {expected_counts}"
             )
 
-    # The user explicitly requires the exact bf5bfa9 commit. Its immutable
-    # commit object contains its original author metadata; rewriting it would
-    # change the hash. Continue to scan the checked-out files/config/reflogs,
-    # but exempt only this exact submodule's historical commit messages/authors.
+    # Root-My-Device-KSU is pinned by the parent repository gitlink. Its exact
+    # commit can advance when the maintained 32601 device patch port advances,
+    # so the audit compares the initialized worktree to that gitlink instead of
+    # baking a second copy of the SHA into this script.
     audit_git_repository(
         repo,
         f"submodule {relative}",
@@ -433,7 +441,7 @@ def audit_gradle_wrappers(errors: list[str]) -> None:
             errors.append(f"{wrapper_jar.relative_to(ROOT)} official checksum mismatch")
 
 
-def audit_source_provenance(errors: list[str]) -> None:
+def audit_source_provenance(errors: list[str], gitlinks: dict[Path, str]) -> None:
     path = ROOT / "SOURCE_PROVENANCE.json"
     try:
         document = json.loads(path.read_text(encoding="utf-8"))
@@ -456,9 +464,15 @@ def audit_source_provenance(errors: list[str]) -> None:
         for item in document.get("sharedSubmodules", [])
         if isinstance(item, dict)
     }
-    expected = {path.as_posix(): commit for path, commit in EXPECTED_SUBMODULES.items()}
+    expected = {
+        "src/kernelsu/KernelSU": PINNED_SUBMODULES[Path("src/kernelsu/KernelSU")],
+        "src/kernelsu/Root-My-Device-KSU": "tracked-gitlink",
+    }
     if submodules != expected:
         errors.append(f"provenance submodule mismatch: {submodules} != {expected}")
+    rmd_gitlink = gitlinks.get(Path("src/kernelsu/Root-My-Device-KSU"))
+    if not rmd_gitlink:
+        errors.append("Root-My-Device-KSU gitlink is missing")
 
 
 def audit_markdown_links(errors: list[str]) -> None:
@@ -493,7 +507,8 @@ def main() -> int:
         errors.append(".gitmodules is missing")
 
     origin = run("git", "config", "--get", "remote.origin.url")
-    if origin.returncode or origin.stdout.strip() != EXPECTED_ORIGIN:
+    actual_origin = normalize_git_url(origin.stdout) if not origin.returncode else ""
+    if origin.returncode or actual_origin != EXPECTED_ORIGIN:
         errors.append(
             f"top-level origin mismatch: {origin.stdout.strip() or 'missing'} != {EXPECTED_ORIGIN}"
         )
@@ -550,11 +565,15 @@ def main() -> int:
         ):
             errors.append(f"{relative} contains CRLF line endings")
 
-    if gitlinks != EXPECTED_SUBMODULES:
+    if set(gitlinks) != REQUIRED_SUBMODULE_PATHS:
         errors.append(
             "submodule gitlink set mismatch: "
             + repr({str(path): oid for path, oid in gitlinks.items()})
         )
+    for path, expected in PINNED_SUBMODULES.items():
+        actual = gitlinks.get(path)
+        if actual != expected:
+            errors.append(f"{path} gitlink mismatch: {actual or 'missing'} != {expected}")
 
     gitmodules_text = (ROOT / ".gitmodules").read_text(encoding="utf-8") if (ROOT / ".gitmodules").is_file() else ""
     for path, url in EXPECTED_SUBMODULE_URLS.items():
@@ -566,11 +585,12 @@ def main() -> int:
     audit_profiles(errors)
     audit_device_isolation(errors)
     audit_gradle_wrappers(errors)
-    audit_source_provenance(errors)
+    audit_source_provenance(errors, gitlinks)
     audit_markdown_links(errors)
-    audit_git_repository(ROOT, "top-level repository", errors)
+    audit_git_repository(ROOT, "top-level repository", errors, scan_history=False)
 
-    for path, expected_head in EXPECTED_SUBMODULES.items():
+    for path in sorted(REQUIRED_SUBMODULE_PATHS):
+        expected_head = PINNED_SUBMODULES.get(path) or gitlinks.get(path, "")
         audit_submodule_worktree(path, expected_head, errors)
 
     for args, label in (

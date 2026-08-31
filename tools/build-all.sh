@@ -186,21 +186,33 @@ if [ "$BUILD_ONEPLUS" -eq 1 ]; then
   fi
 fi
 
-KSU_EXPECTED='b0bc817b4e966aa6aa830834eaf6ef765d821d40'
-RMD_EXPECTED='bf5bfa9ba0e7430611cca4b55ab12885df2d4eaa'
-for spec in \
-  "src/kernelsu/KernelSU:$KSU_EXPECTED" \
-  "src/kernelsu/Root-My-Device-KSU:$RMD_EXPECTED"; do
-  path=${spec%%:*}
-  expected=${spec#*:}
-  [ -e "$REPOSITORY_ROOT/$path/.git" ] || {
-    echo "submodule is not initialized: $path" >&2
+KSU_EXPECTED='932014ab5b2c9b74a3d11e2ec4d17dd10fc9442e'
+KSU_PATH="$REPOSITORY_ROOT/src/kernelsu/KernelSU"
+RMD_PATH="$REPOSITORY_ROOT/src/kernelsu/Root-My-Device-KSU"
+for path in "$KSU_PATH" "$RMD_PATH"; do
+  [ -e "$path/.git" ] || {
+    echo "submodule is not initialized: ${path#$REPOSITORY_ROOT/}" >&2
     echo "Run: git submodule update --init --recursive" >&2
     exit 2
   }
-  actual=$(git -C "$REPOSITORY_ROOT/$path" rev-parse HEAD)
-  [ "$actual" = "$expected" ] || {
-    echo "$path pin mismatch: $actual != $expected" >&2
+  [ -z "$(git -C "$path" status --porcelain --untracked-files=all)" ] || {
+    echo "submodule is dirty: ${path#$REPOSITORY_ROOT/}" >&2
+    exit 2
+  }
+done
+
+actual_ksu=$(git -C "$KSU_PATH" rev-parse HEAD)
+[ "$actual_ksu" = "$KSU_EXPECTED" ] || {
+  echo "src/kernelsu/KernelSU pin mismatch: $actual_ksu != $KSU_EXPECTED" >&2
+  exit 2
+}
+RMD_EXPECTED=$(git -C "$RMD_PATH" rev-parse HEAD)
+for required_patch_dir in \
+  "$RMD_PATH/patches/32601/common" \
+  "$RMD_PATH/patches/32601/devices/asteroids" \
+  "$RMD_PATH/patches/32601/devices/oneplus-pad3"; do
+  [ -d "$required_patch_dir" ] || {
+    echo "Root-My-Device-KSU 32601 port is missing: $required_patch_dir" >&2
     exit 2
   }
 done
@@ -266,6 +278,12 @@ if [ "$BUILD_NOTHING" -eq 1 ]; then
     "${nothing_command[@]}"
 fi
 
+if [ "$BUILD_NOTHING" -eq 1 ] && [ "$BUILD_ONEPLUS" -eq 1 ] && \
+    [ "${RMD_CI_PRUNE_DOCKER:-0}" = 1 ]; then
+  echo "==> Pruning Docker cache before OnePlus build"
+  docker system prune -af || true
+fi
+
 if [ "$BUILD_ONEPLUS" -eq 1 ]; then
   run_device_build \
     "OnePlus Pad 3" \
@@ -278,5 +296,60 @@ if [ "${#build_failures[@]}" -ne 0 ]; then
   printf '  - %s\n' "${build_failures[@]}" >&2
   exit 1
 fi
+
+DIST="$REPOSITORY_ROOT/dist"
+rm -rf "$DIST"
+mkdir -p "$DIST"
+
+copy_release_file() {
+  local source=$1
+  local destination=$2
+  [ -s "$source" ] || { echo "release artifact is missing: $source" >&2; exit 3; }
+  cp "$source" "$DIST/$destination"
+}
+
+if [ "$BUILD_NOTHING" -eq 1 ]; then
+  mapfile -t nothing_managers < <(
+    find "$REPOSITORY_ROOT/devices/nothing-phone-3a/build/asteroids-fixed/manager-dist" \
+      -maxdepth 1 -type f -name '*.apk' -print
+  )
+  [ "${#nothing_managers[@]}" -eq 1 ] || {
+    echo "expected exactly one Nothing Manager APK, found ${#nothing_managers[@]}" >&2
+    exit 3
+  }
+  copy_release_file \
+    "$REPOSITORY_ROOT/devices/nothing-phone-3a/app/build/outputs/apk/release/app-release.apk" \
+    "RootMyNothing.apk"
+  copy_release_file "${nothing_managers[0]}" "RootMyDeviceKSU-Asteroids.apk"
+  copy_release_file \
+    "$REPOSITORY_ROOT/devices/nothing-phone-3a/build/asteroids-fixed/build-manifest.txt" \
+    "RootMyNothing-build-manifest.txt"
+fi
+
+if [ "$BUILD_ONEPLUS" -eq 1 ]; then
+  copy_release_file \
+    "$REPOSITORY_ROOT/devices/oneplus-pad-3/app/build/outputs/apk/release/app-release.apk" \
+    "RootMyOnePlusPad3.apk"
+  copy_release_file \
+    "$REPOSITORY_ROOT/devices/oneplus-pad-3/build/oneplus-pad3-fixed/manager-dist/RootMyDeviceKSU_32601_OnePlusPad3.apk" \
+    "RootMyDeviceKSU-OnePlusPad3.apk"
+  copy_release_file \
+    "$REPOSITORY_ROOT/devices/oneplus-pad-3/build/oneplus-pad3-fixed/build-manifest.txt" \
+    "RootMyOnePlusPad3-build-manifest.txt"
+fi
+
+(
+  cd "$DIST"
+  sha256sum ./*.apk > SHA256SUMS.txt
+)
+printf '%s\n' \
+  "source_commit=$(git -C "$REPOSITORY_ROOT" rev-parse HEAD)" \
+  "kernelsu_commit=$KSU_EXPECTED" \
+  "rmd_ksu_commit=$RMD_EXPECTED" \
+  "built_at_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+  > "$DIST/release-metadata.txt"
+
+echo "==> Release files staged in $DIST"
+ls -lh "$DIST"
 
 echo "==> Combined release build completed successfully"

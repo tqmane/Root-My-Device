@@ -23,9 +23,8 @@ KERNEL_RELEASE='6.6.118-android15-8-g2e6b9c3812c5-ab15114928-4k'
 TARGET="oneplus-pad3/ex/$KERNEL_RELEASE"
 TARGET_SLUG=${TARGET//\//_}
 CORE='core66'
-KSU_PIN='b0bc817b4e966aa6aa830834eaf6ef765d821d40'
-RMD_PATCH_PIN='bf5bfa9ba0e7430611cca4b55ab12885df2d4eaa'
-KSU_VERSION='32525'
+KSU_PIN='932014ab5b2c9b74a3d11e2ec4d17dd10fc9442e'
+KSU_VERSION='32601'
 KMI='android15-6.6'
 DDK_IMAGE='ghcr.io/ylarod/ddk-min:android15-6.6-20260313'
 MANAGER_PACKAGE='org.witaqua.pwn.kernelsu'
@@ -171,12 +170,14 @@ COMMON_PATCH_DIR="$RMD/patches/$KSU_VERSION/common"
   echo "missing KernelSU $KSU_VERSION common patches: $COMMON_PATCH_DIR" >&2
   exit 2
 }
+RMD_PATCH_COMMIT='untracked-source'
 if git -C "$RMD" rev-parse --git-dir >/dev/null 2>&1; then
-  actual_rmd_patch_pin=$(git -C "$RMD" rev-parse HEAD)
-  [ "$actual_rmd_patch_pin" = "$RMD_PATCH_PIN" ] || {
-    echo "Root-My-Device-KSU pin mismatch: $actual_rmd_patch_pin != $RMD_PATCH_PIN" >&2
+  RMD_PATCH_COMMIT=$(git -C "$RMD" rev-parse HEAD)
+  [ -z "$(git -C "$RMD" status --porcelain --untracked-files=all)" ] || {
+    echo "Root-My-Device-KSU submodule is dirty; commit/pin the 32601 port before release builds" >&2
     exit 2
   }
+  echo "==> Root-My-Device-KSU: $RMD_PATCH_COMMIT"
 fi
 
 # The release build supplies its only two compiler additions itself: the
@@ -2094,6 +2095,7 @@ printf '%s\n' \
   "kmi=$KMI" \
   "ksu_pin=$KSU_PIN" \
   "ksu_version=$KSU_VERSION" \
+  "rmd_patch_commit=$RMD_PATCH_COMMIT" \
   "manager_certificate_size=$MANAGER_CERT_SIZE_DEC" \
   "manager_certificate_sha256=$MANAGER_CERT_HASH" \
   "payload=$PAYLOAD_HASH $PAYLOAD" \
