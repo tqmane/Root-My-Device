@@ -15,22 +15,26 @@ jobs:
     timeout-minutes: 45
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: false
           fetch-depth: 1
 
       - name: Set up JDK 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '21'
 
       - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
+        with:
+          cmdline-tools-version: '14742923'
+          packages: 'platform-tools'
+          log-accepted-android-sdk-licenses: false
 
       - name: Install Android platform
-        run: sdkmanager 'platforms;android-37' 'build-tools;37.0.0'
+        run: sdkmanager 'platforms;android-37' 'build-tools;36.0.0'
 
       - name: Audit and syntax checks
         run: |
@@ -42,7 +46,7 @@ jobs:
         run: make contracts
 
       - name: Set up Gradle cache
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v6
 
       - name: Unit tests and debug APKs
         run: make apps
