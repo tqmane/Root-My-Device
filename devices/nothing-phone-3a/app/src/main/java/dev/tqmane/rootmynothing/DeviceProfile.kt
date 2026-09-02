@@ -53,7 +53,9 @@ object AsteroidsTarget {
     const val KMI = "android14-6.1"
     const val MANAGER_PACKAGE = "org.witaqua.pwn.kernelsu"
 
-    fun validate(snapshot: DeviceSnapshot): Compatibility {
+    fun validate(snapshot: DeviceSnapshot, checksEnabled: Boolean = true): Compatibility {
+        if (!checksEnabled) return Compatibility(true, emptyList())
+
         val mismatches = buildList {
             if (snapshot.model != MODEL) add("MODEL=${snapshot.model} (expected $MODEL)")
             if (snapshot.device != DEVICE) add("DEVICE=${snapshot.device} (expected $DEVICE)")
