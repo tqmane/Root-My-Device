@@ -30,6 +30,7 @@ enum class RootStage {
 data class RootUiState(
     val snapshot: DeviceSnapshot? = null,
     val compatibility: Compatibility = Compatibility(false, emptyList()),
+    val compatibilityChecksEnabled: Boolean = true,
     val stage: RootStage = RootStage.Checking,
     val status: String = "Checking device",
     val kernelSuActive: Boolean = false,
@@ -59,6 +60,7 @@ private enum class LateLoadRoute {
 }
 
 class RootViewModel(application: Application) : AndroidViewModel(application) {
+    private val preferences = application.getSharedPreferences(PREFERENCES_NAME, 0)
     private val app = application
     private val mutableState = MutableStateFlow(RootUiState())
     private val operationInFlight = AtomicBoolean(false)
@@ -77,7 +79,8 @@ class RootViewModel(application: Application) : AndroidViewModel(application) {
         }
         viewModelScope.launch(Dispatchers.IO) {
             val snapshot = DeviceSnapshot.current()
-            val compatibility = AsteroidsTarget.validate(snapshot)
+            val compatibilityChecksEnabled = preferences.getBoolean(COMPATIBILITY_CHECKS_KEY, true)
+            val compatibility = AsteroidsTarget.validate(snapshot, compatibilityChecksEnabled)
             val markerCompleted = moduleMarkerMatchesBoot()
             if (markerCompleted && !moduleStagesCompletedReceiptThisBoot()) {
                 storeVerifiedReceipt(modulesRequested = true, modulesCompleted = true)
@@ -112,6 +115,7 @@ class RootViewModel(application: Application) : AndroidViewModel(application) {
             mutableState.value = RootUiState(
                 snapshot = snapshot,
                 compatibility = compatibility,
+                compatibilityChecksEnabled = compatibilityChecksEnabled,
                 stage = if (active) RootStage.Success else if (compatibility.compatible) {
                     RootStage.Ready
                 } else {
@@ -134,6 +138,12 @@ class RootViewModel(application: Application) : AndroidViewModel(application) {
         }.invokeOnCompletion {
             operationInFlight.set(false)
         }
+    }
+
+    fun setCompatibilityChecksEnabled(enabled: Boolean) {
+        if (mutableState.value.busy) return
+        preferences.edit().putBoolean(COMPATIBILITY_CHECKS_KEY, enabled).apply()
+        refresh()
     }
 
     fun startRoot() {
@@ -672,3 +682,6 @@ class RootViewModel(application: Application) : AndroidViewModel(application) {
         private fun sanitize(value: String): String = KERNEL_POINTER.replace(value, "<kernel-address>")
     }
 }
+
+private const val PREFERENCES_NAME = "root_my_nothing_preferences"
+private const val COMPATIBILITY_CHECKS_KEY = "compatibility_checks_enabled"

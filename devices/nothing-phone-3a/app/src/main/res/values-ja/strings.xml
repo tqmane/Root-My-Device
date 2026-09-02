@@ -30,6 +30,9 @@
     <string name="page_size">ページサイズ</string>
     <string name="target_exact">A059 / Asteroids / B4.1-260618-1048 専用</string>
     <string name="target_guard">モデル・デバイス・fingerprint・ビルド・SDK・セキュリティパッチ・カーネル・ページサイズ・ABI が完全一致しない限り Root は実行できません。</string>
+    <string name="compatibility_checks">互換性チェック</string>
+    <string name="compatibility_checks_summary">Root 実行前に対象デバイスを厳密に検証します。</string>
+    <string name="compatibility_checks_disabled_warning">互換性チェックが無効です。対象プロファイルを検証せずに Root を実行します。</string>
     <string name="warning">先にShizukuを起動し、このアプリを許可してください。カーネル脆弱性の失敗時には端末が再起動する場合があります。Root実行時はインストール済みZygisk/Vectorモジュールも最初のlate-loadで起動するため、明示的なmodule pathではAndroid frameworkを1回再起動します。その途中でこのアプリが閉じる場合があります。</string>
     <string name="about_body">Nothing Phone (3a) A059 Asteroids B4.1-260618-1048 専用の、オフライン一ボタン temporary root / KernelSU late-load / Zygisk・Vector module-stage インストーラーです。Shizukuのshell権限で実行し、ブートローダーを解除せず、データも消去しません。rootは再起動すると消えます。</string>
     <string name="no_logs">実行ログはまだありません。</string>
