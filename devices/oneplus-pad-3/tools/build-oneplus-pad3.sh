@@ -122,6 +122,11 @@ if [ ! -x "$TOOLCHAIN/bin/aarch64-linux-android35-clang" ]; then
 fi
 export ANDROID_NDK_HOME="$NDK"
 
+[ -f "$TOOLCHAIN/lib/libclang.so" ] || {
+  echo "libclang.so not found under $TOOLCHAIN/lib; ksud bindgen needs NDK $NDK_VERSION" >&2
+  exit 2
+}
+
 resolve_android_build_tools() {
   local directory zipalign_help
   while IFS= read -r directory; do

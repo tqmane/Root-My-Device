@@ -72,6 +72,11 @@ NDK="${ANDROID_NDK_HOME:-$ANDROID_HOME/ndk/$NDK_VERSION}"
 }
 export ANDROID_NDK_HOME="$NDK"
 
+[ -f "$NDK/toolchains/llvm/prebuilt/linux-x86_64/lib/libclang.so" ] || {
+  echo "libclang.so not found under $NDK; ksud bindgen needs NDK $NDK_VERSION" >&2
+  exit 2
+}
+
 # Select one coherent SDK build-tools directory instead of assuming a local
 # version number. The chosen zipalign must support 16 KiB page alignment.
 resolve_android_build_tools() {
