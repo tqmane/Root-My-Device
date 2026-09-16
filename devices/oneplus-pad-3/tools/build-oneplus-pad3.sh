@@ -134,7 +134,7 @@ resolve_android_build_tools() {
     [ -x "$directory/zipalign" ] || continue
     [ -x "$directory/aapt" ] || continue
 
-    # The Pad 3 release uses 16 KiB ELF page alignment.  Probe the tool's
+    # The Pad 3 release uses 16 KiB page alignment.  Probe the tool's
     # read-only help output here so an older PATH zipalign cannot let a long
     # build proceed and then reject `-P 16` during final packaging.
     zipalign_help=$("$directory/zipalign" -h 2>&1 || true)
@@ -1722,6 +1722,7 @@ MANAGER_INPUT=$(
     "$MANAGER_PACKAGE" \
     "$KSU_VERSION" \
     "$MANAGER_VERSION_NAME" \
+    "$MANAGER_NAME" \
     "$MANAGER_BUILD_STARTED_NS" <<'PY'
 import json
 import stat
@@ -1732,7 +1733,8 @@ metadata, output_dir = map(Path, sys.argv[1:3])
 expected_package = sys.argv[3]
 expected_version_code = int(sys.argv[4])
 expected_version_name = sys.argv[5]
-build_started_ns = int(sys.argv[6])
+expected_manager_name = sys.argv[6]
+build_started_ns = int(sys.argv[7])
 
 
 def fail(message: str) -> None:
@@ -1786,7 +1788,7 @@ if element.get("versionName") != expected_version_name:
     fail("metadata versionName does not match the pinned KernelSU revision")
 
 expected_filename = (
-    f"KernelSU_{expected_version_name}_{expected_version_code}-release.apk"
+    f"{expected_manager_name.replace(' ', '_')}_{expected_version_name}_{expected_version_code}-release.apk"
 )
 output_filename = element.get("outputFile")
 if output_filename != expected_filename:
