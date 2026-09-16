@@ -76,7 +76,7 @@ jobs:
             'ndk;29.0.14206865'
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            bpftool \
+            linux-tools-common \
             build-essential \
             clang \
             libelf-dev \
