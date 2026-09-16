@@ -31,6 +31,7 @@ jobs:
       ROOT_MY_DEVICE_KEY_ALIAS: ${{ secrets.ROOT_MY_DEVICE_KEY_ALIAS }}
       ROOT_MY_DEVICE_STORE_PASSWORD: ${{ secrets.ROOT_MY_DEVICE_STORE_PASSWORD }}
       ROOT_MY_DEVICE_KEY_PASSWORD: ${{ secrets.ROOT_MY_DEVICE_KEY_PASSWORD }}
+      CARGO_NET_GIT_FETCH_WITH_CLI: 'true'
 
     steps:
       - name: Check out source and pinned submodules
@@ -38,6 +39,13 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
+
+      - name: Configure KernelSU dependency mirrors
+        run: |
+          set -euo pipefail
+          git config --global \
+            url."https://github.com/ReSukiSU/".insteadOf \
+            "https://github.com/Kernel-SU/"
 
       - name: Verify release secrets
         env:
@@ -80,7 +88,8 @@ jobs:
             build-essential \
             clang \
             libelf-dev \
-            llvm
+            llvm \
+            python3-pyelftools
 
       - name: Set up Gradle cache
         uses: gradle/actions/setup-gradle@v6
