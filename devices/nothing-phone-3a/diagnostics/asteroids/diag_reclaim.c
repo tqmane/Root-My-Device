@@ -1,5 +1,6 @@
 /*
- * Asteroids (Nothing Phone 3, B4.1-260618-1048) reclaim-content diagnostic.
+ * Asteroids (Nothing Phone 3a, B4.1-260618-1048 / B4.1-260810-1153, identical
+ * kernel image) reclaim-content diagnostic.
  *
  * Where the bring-up stands: the chain reaches its punch and the consumer's
  * sched_setattr fires (`pselect returned ret=4 calls=1 success=1`), but the

@@ -1,14 +1,15 @@
 # Root My Nothing quick start
 
-This guide is only for the exact Nothing Phone (3a) target:
+This guide is only for the two exact Nothing Phone (3a) builds, which share the identical kernel image:
 
 - `MODEL=A059`
 - `DEVICE=Asteroids`
-- `BUILD=B4.1-260618-1048`
+- `BUILD=B4.1-260618-1048` (`2026-06-01`) or `B4.1-260810-1153` (`2026-08-01`)
 - kernel `6.1.157-android14-11-g82d681c9b06b-ab14634535`
 - Android 16, `arm64-v8a`, 4096-byte pages
 
-Do not run it after an OTA or on another regional build.
+Do not run it on any other OTA or regional build: display, fingerprint, and
+security patch must form one supported set.
 
 ## 1. Build one matched set
 

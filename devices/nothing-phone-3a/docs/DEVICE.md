@@ -9,16 +9,18 @@ claim of compatibility with every Nothing Phone (3a).
 | --- | --- |
 | `ro.product.model` | `A059` |
 | `ro.product.device` | `Asteroids` |
-| `ro.build.display.id` | `B4.1-260618-1048` |
-| `ro.build.fingerprint` | `Nothing/AsteroidsJPN/Asteroids:16/BQ2A.250721.001-BP2A.250605.031.A3/2606181048:user/release-keys` |
+| `ro.build.display.id` | `B4.1-260618-1048` or `B4.1-260810-1153` |
+| `ro.build.fingerprint` | `Nothing/AsteroidsJPN/Asteroids:16/BQ2A.250721.001-BP2A.250605.031.A3/2606181048:user/release-keys` or `.../2608101153:user/release-keys` (matching the display above) |
 | Android SDK | `36` |
-| Security patch | `2026-06-01` |
+| Security patch | `2026-06-01` (with `260618`) or `2026-08-01` (with `260810`) |
 | `uname -r` | `6.1.157-android14-11-g82d681c9b06b-ab14634535` |
 | primary ABI | `arm64-v8a` |
 | page size | `4096` |
 
 The app requires every identity row above before it stages or executes the payload.
-A mismatch fails closed. The corresponding source profile is under:
+Display, fingerprint, and security patch must form one supported set; mixing
+values from different builds fails closed. A mismatch fails closed.
+The corresponding source profile is under:
 
 ```text
 src/targets/asteroids/jp/6.1.157-android14-11-g82d681c9b06b-ab14634535/
@@ -28,6 +30,10 @@ src/targets/asteroids/jp/6.1.157-android14-11-g82d681c9b06b-ab14634535/
 `android14-6.1` exploit core. `p0_fingerprint.h` and the target root glue bind
 the physical/KASLR route to this firmware. The Makefile accepts no other target
 or core in this public device-specific repository.
+
+## Build B4.1-260810-1153 status
+
+`B4.1-260810-1153` shares the identical kernel image, so all `core61` offsets apply to both builds.
 
 ## Runtime contract
 

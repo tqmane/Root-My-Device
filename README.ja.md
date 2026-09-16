@@ -28,7 +28,7 @@ Temporary rootとlive-loadされたKernelSU moduleは通常の再起動後に消
 
 | Project | 必須identity | Kernel / exploit core | 確認状態 |
 | --- | --- | --- | --- |
-| Nothing Phone (3a) | `MODEL=A059`、`DEVICE=Asteroids`、build `B4.1-260618-1048`、Android 16 / SDK 36、security patch `2026-06-01` | `6.1.157-android14-11-g82d681c9b06b-ab14634535`、`android14-6.1`、`core61`、arm64、4096-byte page | Maintainer実機でtemporary root、KernelSU 32525 late-load、Manager認証、module stageまで確認済みです。 |
+| Nothing Phone (3a) | `MODEL=A059`、`DEVICE=Asteroids`、build `B4.1-260618-1048` または `B4.1-260810-1153`、Android 16 / SDK 36 | `6.1.157-android14-11-g82d681c9b06b-ab14634535`、`android14-6.1`、`core61`、arm64、4096-byte page | `260618`: Maintainer実機確認済み。`260810`: 対応。 |
 | OnePlus Pad 3 | `MODEL=OPD2415`、`DEVICE=OP6190L1`、`PRODUCT=OPD2415IN`、build `OPD2415_16.0.9.400(EX01)`、Android 16 / SDK 36、security patch `2026-07-01` | `6.6.118-android15-8-g2e6b9c3812c5-ab15114928-4k`、`android15-6.6`、`core66`、arm64、4096-byte page | Maintainer実機でtemporary root、KernelSU 32525 late-load、signer-matched Manager grant、module/Vector stageまで確認済みです。 |
 
 各appは端末別READMEに記載した完全なprofileを照合してからRootを有効化します。

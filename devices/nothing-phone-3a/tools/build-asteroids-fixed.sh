@@ -250,6 +250,9 @@ cp "$KSU_WORK/kernel/kernelsu.ko" "$KSU_WORK/userspace/ksud/bin/aarch64/${KMI}_k
 
 # Build the exact patched ksud that embeds the exact patched LKM.
 echo "==> build ksud"
+# Kernel-SU org helpers are deleted; fetch the ReSukiSU replacements instead.
+git config --global url."https://github.com/ReSukiSU/".insteadOf "https://github.com/Kernel-SU/"
+export CARGO_NET_GIT_FETCH_WITH_CLI=true
 rustup target add aarch64-linux-android
 export CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER="$TOOLCHAIN/bin/aarch64-linux-android35-clang"
 export CC_aarch64_linux_android="$TOOLCHAIN/bin/aarch64-linux-android35-clang"

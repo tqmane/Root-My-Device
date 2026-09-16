@@ -3,7 +3,8 @@
 
 /* Generated from the Asteroids B4.1-260618-1048 raw kernel Image
  * (boot.img sha256 68b12e1148598a187bb73711a675f615c2bf5236929ecca27e701459a6bd4a1f,
- *  decompressed kernel sha256 b344ddc133e77cb2924a5bdfac268509d542168c546b05c4443a23cceeea1a73).
+ *  decompressed kernel sha256 b344ddc133e77cb2924a5bdfac268509d542168c546b05c4443a23cceeea1a73,
+ * also identical for B4.1-260810-1153). Shared by both builds.
  * For each candidate P0 slide 0x000000..0x1f0000 step 0x10000 these are
  * the eight little-endian qwords at page offsets 0x000..0xe00 of the
  * physical page the oracle aliases: the oracle adds the candidate slide to

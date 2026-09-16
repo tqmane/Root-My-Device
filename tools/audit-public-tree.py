@@ -55,22 +55,40 @@ ONEPLUS_ROOT = Path("devices/oneplus-pad-3")
 EXPECTED_DEVICE_ROOTS = {NOTHING_ROOT, ONEPLUS_ROOT}
 
 EXPECTED_PROFILES = {
-    NOTHING_ROOT: {
-        "profileId": "asteroids-jp-B4.1-260618-1048",
-        "core": "core61",
-        "model": "A059",
-        "device": "asteroids",
-        "buildDisplay": "B4.1-260618-1048",
-        "buildFingerprint": (
-            "Nothing/AsteroidsJPN/Asteroids:16/BQ2A.250721.001-"
-            "BP2A.250605.031.A3/2606181048:user/release-keys"
-        ),
-        "securityPatch": "2026-06-01",
-        "sdk": 36,
-        "kernelRelease": "6.1.157-android14-11-g82d681c9b06b-ab14634535",
-        "abi": "arm64-v8a",
-        "pageSize": 4096,
-    },
+    NOTHING_ROOT: [
+        {
+            "profileId": "asteroids-jp-B4.1-260618-1048",
+            "core": "core61",
+            "model": "A059",
+            "device": "asteroids",
+            "buildDisplay": "B4.1-260618-1048",
+            "buildFingerprint": (
+                "Nothing/AsteroidsJPN/Asteroids:16/BQ2A.250721.001-"
+                "BP2A.250605.031.A3/2606181048:user/release-keys"
+            ),
+            "securityPatch": "2026-06-01",
+            "sdk": 36,
+            "kernelRelease": "6.1.157-android14-11-g82d681c9b06b-ab14634535",
+            "abi": "arm64-v8a",
+            "pageSize": 4096,
+        },
+        {
+            "profileId": "asteroids-jp-B4.1-260810-1153",
+            "core": "core61",
+            "model": "A059",
+            "device": "asteroids",
+            "buildDisplay": "B4.1-260810-1153",
+            "buildFingerprint": (
+                "Nothing/AsteroidsJPN/Asteroids:16/BQ2A.250721.001-"
+                "BP2A.250605.031.A3/2608101153:user/release-keys"
+            ),
+            "securityPatch": "2026-08-01",
+            "sdk": 36,
+            "kernelRelease": "6.1.157-android14-11-g82d681c9b06b-ab14634535",
+            "abi": "arm64-v8a",
+            "pageSize": 4096,
+        },
+    ],
     ONEPLUS_ROOT: {
         "profileId": "oneplus-pad3-ex-16.0.9.400",
         "core": "core66",
@@ -330,6 +348,7 @@ def audit_submodule_worktree(
 
 def audit_profiles(errors: list[str]) -> None:
     for device_root, expected in EXPECTED_PROFILES.items():
+        expected_targets = expected if isinstance(expected, list) else [expected]
         path = ROOT / device_root / "src/targets.json"
         try:
             document = json.loads(path.read_text(encoding="utf-8"))
@@ -337,16 +356,29 @@ def audit_profiles(errors: list[str]) -> None:
             errors.append(f"unable to parse {path.relative_to(ROOT)}: {error}")
             continue
         targets = document.get("targets")
-        if not isinstance(targets, list) or len(targets) != 1:
-            errors.append(f"{path.relative_to(ROOT)} must contain exactly one target")
+        if not isinstance(targets, list) or len(targets) != len(expected_targets):
+            errors.append(
+                f"{path.relative_to(ROOT)} must contain exactly "
+                f"{len(expected_targets)} target(s)"
+            )
             continue
-        target = targets[0]
-        for key, value in expected.items():
-            if target.get(key) != value:
+        for expected_target in expected_targets:
+            profile_id = expected_target.get("profileId")
+            target = next(
+                (item for item in targets if item.get("profileId") == profile_id),
+                None,
+            )
+            if target is None:
                 errors.append(
-                    f"{path.relative_to(ROOT)} {key} mismatch: "
-                    f"{target.get(key)!r} != {value!r}"
+                    f"{path.relative_to(ROOT)} is missing target {profile_id!r}"
                 )
+                continue
+            for key, value in expected_target.items():
+                if target.get(key) != value:
+                    errors.append(
+                        f"{path.relative_to(ROOT)} {profile_id} {key} mismatch: "
+                        f"{target.get(key)!r} != {value!r}"
+                    )
 
 
 def audit_device_isolation(errors: list[str]) -> None:

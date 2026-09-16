@@ -5,24 +5,28 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class DeviceProfileTest {
-    private val exact = DeviceSnapshot(
+    private fun snapshotFor(build: AsteroidsTarget.SupportedBuild) = DeviceSnapshot(
         model = AsteroidsTarget.MODEL,
         device = AsteroidsTarget.DEVICE,
-        display = AsteroidsTarget.DISPLAY,
-        fingerprint = AsteroidsTarget.FINGERPRINT,
+        display = build.display,
+        fingerprint = build.fingerprint,
         kernelRelease = AsteroidsTarget.KERNEL,
         sdk = AsteroidsTarget.SDK,
-        securityPatch = AsteroidsTarget.SECURITY_PATCH,
+        securityPatch = build.securityPatch,
         pageSize = AsteroidsTarget.PAGE_SIZE,
         abi = "arm64-v8a",
     )
 
-    @Test
-    fun exactProfileIsAccepted() {
-        val result = AsteroidsTarget.validate(exact)
+    private val exact = snapshotFor(AsteroidsTarget.SUPPORTED_BUILDS.first())
 
-        assertTrue(result.mismatches.joinToString("\n"), result.compatible)
-        assertTrue(result.mismatches.isEmpty())
+    @Test
+    fun everySupportedBuildIsAccepted() {
+        AsteroidsTarget.SUPPORTED_BUILDS.forEach { build ->
+            val result = AsteroidsTarget.validate(snapshotFor(build))
+
+            assertTrue(result.mismatches.joinToString("\n"), result.compatible)
+            assertTrue(result.mismatches.isEmpty())
+        }
     }
 
     @Test
@@ -47,5 +51,23 @@ class DeviceProfileTest {
                 result.mismatches.any { it.startsWith(expectedMessage) },
             )
         }
+    }
+
+    @Test
+    fun mixedBuildIdentityIsRejected() {
+        val first = AsteroidsTarget.SUPPORTED_BUILDS[0]
+        val second = AsteroidsTarget.SUPPORTED_BUILDS[1]
+        // Display/fingerprint/patch from different builds must not combine.
+        val mixed = snapshotFor(first).copy(
+            display = second.display,
+            fingerprint = second.fingerprint,
+        )
+        val result = AsteroidsTarget.validate(mixed)
+
+        assertFalse(result.compatible)
+        assertTrue(
+            result.mismatches.joinToString("\n"),
+            result.mismatches.any { it.startsWith("BUILD/FINGERPRINT/") },
+        )
     }
 }

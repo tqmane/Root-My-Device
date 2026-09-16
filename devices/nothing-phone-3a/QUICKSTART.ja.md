@@ -1,14 +1,15 @@
 # Root My Nothing クイックスタート
 
-対象は次のexact Nothing Phone (3a)のみです。
+対象は次の2つのexact Nothing Phone (3a) buildのみです（同一カーネルイメージ）。
 
 - `MODEL=A059`
 - `DEVICE=Asteroids`
-- `BUILD=B4.1-260618-1048`
+- `BUILD=B4.1-260618-1048`（`2026-06-01`）または `B4.1-260810-1153`（`2026-08-01`）
 - Kernel `6.1.157-android14-11-g82d681c9b06b-ab14634535`
 - Android 16 / `arm64-v8a` / 4096-byte page
 
-OTA後や別地域buildでは実行しないでください。
+それ以外のOTAや別地域buildでは実行しないでください。display・fingerprint・
+セキュリティパッチは1つの対応setとして一致する必要があります。
 
 ## 1. 対応する一式をbuild
 

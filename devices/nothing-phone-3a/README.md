@@ -4,7 +4,8 @@
 
 This directory is the independent Nothing Phone (3a) application and native
 build chain inside the Root My Device monorepo. It implements an **exact-build**
-temporary-root → KernelSU late-load flow for one A059/Asteroids firmware.
+temporary-root → KernelSU late-load flow for two A059/Asteroids firmwares
+(`B4.1-260618-1048` and `B4.1-260810-1153`) that share the identical kernel image.
 
 The app runs the bundled native payload through Shizuku's shell service,
 validates every supported device field before enabling Root, stages a matching
@@ -22,25 +23,26 @@ Root is temporary and disappears after a normal reboot.
 
 ## Supported target
 
-This device project supports **one exact target only**:
+This device project supports **two exact builds** that share the identical kernel image:
 
 | Field | Required value |
 | --- | --- |
 | Device | Nothing Phone (3a) |
 | Model | `A059` |
 | Device codename | `Asteroids` |
-| Build display | `B4.1-260618-1048` |
-| Fingerprint | `Nothing/AsteroidsJPN/Asteroids:16/BQ2A.250721.001-BP2A.250605.031.A3/2606181048:user/release-keys` |
+| Build display | `B4.1-260618-1048` or `B4.1-260810-1153` |
+| Fingerprint | `Nothing/AsteroidsJPN/Asteroids:16/BQ2A.250721.001-BP2A.250605.031.A3/2606181048:user/release-keys` or `.../2608101153:user/release-keys` (matching the display) |
 | Android / SDK | Android 16 / SDK 36 |
-| Security patch | `2026-06-01` |
+| Security patch | `2026-06-01` (with `260618`) or `2026-08-01` (with `260810`) |
 | Kernel | `6.1.157-android14-11-g82d681c9b06b-ab14634535` |
 | KMI / exploit core | `android14-6.1` / `core61` |
 | ABI / page size | `arm64-v8a` / 4096 bytes |
-| Status | Maintainer device-verified: temporary root, KernelSU 32525 late-load, Manager authentication, and module-stage flow work on this exact build. |
+| Status | `260618`: maintainer device-verified. `260810`: supported (identical kernel image). |
 
 The application compares model, device, build display, full fingerprint, SDK,
-security patch, kernel release, ABI, and page size. A Nothing OS OTA, regional
-variant, or another Phone (3a) build is **not** implicitly supported.
+security patch, kernel release, ABI, and page size. Display, fingerprint, and
+security patch must form one supported set. Any other Nothing OS OTA, regional
+variant, or Phone (3a) build is **not** supported and fails closed.
 
 ## Runtime flow
 
