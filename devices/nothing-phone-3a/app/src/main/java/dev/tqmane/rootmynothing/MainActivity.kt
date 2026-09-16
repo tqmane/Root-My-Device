@@ -57,6 +57,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -104,6 +105,7 @@ class MainActivity : ComponentActivity() {
                     onRoot = viewModel::startRoot,
                     onRetryModules = viewModel::retryModuleStages,
                     onRefresh = viewModel::refresh,
+                    onCompatibilityChecksChanged = viewModel::setCompatibilityChecksEnabled,
                 )
             }
         }
@@ -117,6 +119,7 @@ private fun RootMyNothingApp(
     onRoot: () -> Unit,
     onRetryModules: () -> Unit,
     onRefresh: () -> Unit,
+    onCompatibilityChecksChanged: (Boolean) -> Unit,
 ) {
     var tab by remember { mutableStateOf(AppTab.Home) }
     val context = LocalContext.current
@@ -201,7 +204,11 @@ private fun RootMyNothingApp(
                 onExport = { export.launch("root-my-nothing-${KernelSuDetector.bootId() ?: "log"}.txt") },
                 modifier = Modifier.padding(padding),
             )
-            AppTab.About -> AboutScreen(Modifier.padding(padding))
+            AppTab.About -> AboutScreen(
+                compatibilityChecksEnabled = state.compatibilityChecksEnabled,
+                onCompatibilityChecksChanged = onCompatibilityChecksChanged,
+                modifier = Modifier.padding(padding),
+            )
         }
     }
 }
@@ -237,7 +244,11 @@ private fun HomeScreen(
             NoticeCard(
                 icon = Icons.Default.Warning,
                 title = stringResource(R.string.warning),
-                body = stringResource(R.string.target_guard),
+                body = if (state.compatibilityChecksEnabled) {
+                    stringResource(R.string.target_guard)
+                } else {
+                    stringResource(R.string.compatibility_checks_disabled_warning)
+                },
                 error = false,
             )
         }
@@ -539,7 +550,11 @@ private fun LogsScreen(
 }
 
 @Composable
-private fun AboutScreen(modifier: Modifier = Modifier) {
+private fun AboutScreen(
+    compatibilityChecksEnabled: Boolean,
+    onCompatibilityChecksChanged: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Column(
         modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -547,6 +562,24 @@ private fun AboutScreen(modifier: Modifier = Modifier) {
         Icon(Icons.Default.Info, null, Modifier.size(52.dp), tint = MaterialTheme.colorScheme.primary)
         Text(stringResource(R.string.app_name), style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
         Text(stringResource(R.string.about_body), style = MaterialTheme.typography.bodyLarge)
+        Card(modifier = Modifier.fillMaxWidth()) {
+            Row(
+                modifier = Modifier.padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column(Modifier.weight(1f)) {
+                    Text(stringResource(R.string.compatibility_checks), fontWeight = FontWeight.SemiBold)
+                    Text(
+                        stringResource(R.string.compatibility_checks_summary),
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                }
+                Switch(
+                    checked = compatibilityChecksEnabled,
+                    onCheckedChange = onCompatibilityChecksChanged,
+                )
+            }
+        }
         NoticeCard(
             Icons.Default.Security,
             stringResource(R.string.target_exact),

@@ -48,4 +48,25 @@ class DeviceProfileTest {
             )
         }
     }
+
+    @Test
+    fun disabledChecksAcceptRegionalFingerprintVariant() {
+        val regional = exact.copy(
+            fingerprint = exact.fingerprint.replace("AsteroidsJPN", "AsteroidsEEA"),
+        )
+
+        val result = AsteroidsTarget.validate(regional, checksEnabled = false)
+
+        assertTrue(result.compatible)
+        assertTrue(result.mismatches.isEmpty())
+    }
+
+    @Test
+    fun disabledChecksAreExplicitAndDoNotChangeDefault() {
+        val regional = exact.copy(
+            fingerprint = exact.fingerprint.replace("AsteroidsJPN", "AsteroidsEEA"),
+        )
+
+        assertFalse(AsteroidsTarget.validate(regional).compatible)
+    }
 }

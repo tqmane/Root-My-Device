@@ -30,6 +30,9 @@
     <string name="page_size">Page size</string>
     <string name="target_exact">A059 / Asteroids / B4.1-260618-1048 only</string>
     <string name="target_guard">Root is disabled unless model, device, fingerprint, build, SDK, security patch, kernel, page size and ABI all match.</string>
+    <string name="compatibility_checks">Compatibility checks</string>
+    <string name="compatibility_checks_summary">Keep exact device validation enabled before running Root.</string>
+    <string name="compatibility_checks_disabled_warning">Compatibility checks are disabled. Root will run on this device without validating the target profile.</string>
     <string name="warning">Start Shizuku and grant this app permission before running. This uses a kernel vulnerability; a miss may reboot the phone. Root also starts installed Zygisk/Vector modules in the initial late-load, and the explicit module path restarts the Android framework once; this app may close during that restart.</string>
     <string name="about_body">An offline one-button temporary-root, KernelSU late-load and Zygisk/Vector module-stage installer for the exact Nothing Phone (3a) A059 Asteroids B4.1-260618-1048 firmware. It runs through Shizuku shell permission, never unlocks the bootloader or wipes data, and root disappears after reboot.</string>
     <string name="no_logs">No run logs yet.</string>
