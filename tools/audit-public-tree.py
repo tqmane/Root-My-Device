@@ -88,6 +88,22 @@ EXPECTED_PROFILES = {
             "abi": "arm64-v8a",
             "pageSize": 4096,
         },
+        {
+            "profileId": "asteroids-global-B4.1-260810-1153",
+            "core": "core61",
+            "model": "A059",
+            "device": "asteroids",
+            "buildDisplay": "B4.1-260810-1153",
+            "buildFingerprint": (
+                "Nothing/Asteroids/Asteroids:16/BQ2A.250721.001-"
+                "BP2A.250605.031.A3/2608101153:user/release-keys"
+            ),
+            "securityPatch": "2026-08-01",
+            "sdk": 36,
+            "kernelRelease": "6.1.157-android14-11-g82d681c9b06b-ab14634535",
+            "abi": "arm64-v8a",
+            "pageSize": 4096,
+        },
     ],
     ONEPLUS_ROOT: {
         "profileId": "oneplus-pad3-ex-16.0.9.400",
