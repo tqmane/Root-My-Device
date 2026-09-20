@@ -85,8 +85,16 @@ echo "marker_boot_id=$marker_boot_id"
 echo "marker_run_id=$marker_run_id"
 echo "marker_ksud_sha256=$marker_ksud_sha"
 echo "marker_uid_gid_mode_nlink=$marker_stat"
-case "$marker_run_id" in ''|*[!0-9a-f]*) run_id_valid=0 ;; *) run_id_valid=1 ;; esac
-case "$marker_ksud_sha" in ''|*[!0-9a-f]*) hash_valid=0 ;; *) hash_valid=1 ;; esac
+if printf '%s' "$marker_run_id" | grep -Eq '^[0-9a-f]+$'; then
+  run_id_valid=1
+else
+  run_id_valid=0
+fi
+if printf '%s' "$marker_ksud_sha" | grep -Eq '^[0-9a-f]+$'; then
+  hash_valid=1
+else
+  hash_valid=0
+fi
 if [ "$marker_version" = 1 ] && [ -n "$boot_id" ] && \
    [ "$marker_boot_id" = "$boot_id" ] && \
    [ "$run_id_valid" = 1 ] && [ "${#marker_run_id}" -eq 32 ] && \
@@ -104,23 +112,23 @@ echo '=== RANDOM UUID SLIDE ORACLE ==='
 # data slot regenerates, while a stable pair is the fail-stop signature used
 # by the Pad 3 slide preflight.  This is observation only.
 uuid_xtrace=0
-case "$-" in
-  *x*) uuid_xtrace=1; set +x ;;
-esac
+if [ "${-#*x}" != "$-" ]; then
+  uuid_xtrace=1
+  set +x
+fi
 uuid_first=$(cat /proc/sys/kernel/random/uuid 2>/dev/null || true)
 uuid_second=$(cat /proc/sys/kernel/random/uuid 2>/dev/null || true)
 uuid_chars=$uuid_first$uuid_second
 if [ "${#uuid_first}" -eq 36 ] && [ "${#uuid_second}" -eq 36 ]; then
-  case "$uuid_chars" in
-    *[!0-9a-fA-F-]*) uuid_result='uuid_reads=incomplete stable=unknown' ;;
-    *)
-      if [ "$uuid_first" = "$uuid_second" ]; then
-        uuid_result='uuid_reads=complete stable=1'
-      else
-        uuid_result='uuid_reads=complete stable=0'
-      fi
-      ;;
-  esac
+  if printf '%s' "$uuid_chars" | grep -Eq '^[0-9a-fA-F-]+$'; then
+    if [ "$uuid_first" = "$uuid_second" ]; then
+      uuid_result='uuid_reads=complete stable=1'
+    else
+      uuid_result='uuid_reads=complete stable=0'
+    fi
+  else
+    uuid_result='uuid_reads=incomplete stable=unknown'
+  fi
 else
   uuid_result='uuid_reads=incomplete stable=unknown'
 fi

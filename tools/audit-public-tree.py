@@ -322,7 +322,7 @@ def audit_submodule_worktree(
             if child.parent == Path("patches/32601/devices/oneplus-pad3")
             and child.suffix == ".patch"
         ]
-        expected_counts = {"common": 6, "asteroids": 3, "oneplus-pad3": 13}
+        expected_counts = {"common": 6, "asteroids": 4, "oneplus-pad3": 13}
         actual_counts = {
             "common": len(common),
             "asteroids": len(asteroids),
