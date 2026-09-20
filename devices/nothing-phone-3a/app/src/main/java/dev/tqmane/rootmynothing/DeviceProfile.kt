@@ -65,10 +65,14 @@ object AsteroidsTarget {
         "Nothing/AsteroidsJPN/Asteroids:16/BQ2A.250721.001-" +
             "BP2A.250605.031.A3/2608101153:user/release-keys"
     const val SECURITY_PATCH_260810 = "2026-08-01"
+    const val FINGERPRINT_260810_GLOBAL =
+        "Nothing/Asteroids/Asteroids:16/BQ2A.250721.001-" +
+            "BP2A.250605.031.A3/2608101153:user/release-keys"
 
     val SUPPORTED_BUILDS = listOf(
         SupportedBuild(DISPLAY, FINGERPRINT, SECURITY_PATCH),
         SupportedBuild(DISPLAY_260810, FINGERPRINT_260810, SECURITY_PATCH_260810),
+        SupportedBuild(DISPLAY_260810, FINGERPRINT_260810_GLOBAL, SECURITY_PATCH_260810),
     )
 
     private val SUPPORTED_DISPLAYS = SUPPORTED_BUILDS.map { it.display }
