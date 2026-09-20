@@ -107,10 +107,9 @@ path、生成物、診断logはGit対象外です。
 
 ## 共有KernelSU patch
 
-KernelSU 32525 common 6件と`asteroids` 3件を、
-`bf5bfa9ba0e7430611cca4b55ab12885df2d4eaa`へpinした共有monorepo submoduleから
-使用します。Build scriptはsubmodule HEADの完全一致を検査し、その9件だけをpin済み
-KernelSU checkoutへ適用します。
+KernelSU 32601 common 6件と`asteroids` 4件を共有monorepo submoduleから使用します。
+Build scriptはsubmoduleがcleanであることを確認してHEADをbuild manifestへ記録し、その10件
+だけをpin済みKernelSU checkoutへ適用します。
 
 ## Artifact一体性
 

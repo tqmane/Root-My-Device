@@ -214,6 +214,7 @@ DEVICE_PATCHES=(
   "$RMD/patches/$KSU_VERSION/devices/asteroids/0001-recreate-zygote-boundary.patch"
   "$RMD/patches/$KSU_VERSION/devices/asteroids/0002-vector-toybox-unshare.patch"
   "$RMD/patches/$KSU_VERSION/devices/asteroids/0003-refresh-manager-after-late-load.patch"
+  "$RMD/patches/$KSU_VERSION/devices/asteroids/0004-retry-vector-launcher-after-soft-reboot.patch"
 )
 PATCH_NORMALIZED="$WORK/normalized-patches"
 rm -rf "$PATCH_NORMALIZED"
@@ -278,7 +279,7 @@ if grep -aFq "$HOME/" "$WORK/ksud-asteroids"; then
 fi
 
 # Sanity markers that distinguish this fixed ksud from the old one.
-for marker in 'late-load compatibility' 'recreating zygote-start boundary' 'Vector service launcher installed with absolute Android tools' 'one monitored direct service launch' 'launching Vector directly with /system/bin/sh' 'Vector root daemon socket registered' 'Vector CLI framework health verified' 'KernelSU Manager restarted after late-load'; do
+for marker in 'late-load compatibility' 'recreating zygote-start boundary' 'Vector service launcher installed with absolute Android tools' 'RMN_ASTEROIDS_VECTOR_SERVICE_V4' 'one monitored direct service launch' 'launching Vector directly with /system/bin/sh' 'Vector root daemon socket registered' 'Vector CLI framework health verified' 'KernelSU Manager restarted after late-load'; do
   grep -qa "$marker" "$WORK/ksud-asteroids" || {
     echo "built ksud is missing marker: $marker" >&2; exit 4; }
 done

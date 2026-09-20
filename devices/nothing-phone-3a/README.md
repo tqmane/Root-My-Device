@@ -114,11 +114,10 @@ files, local SDK paths, generated outputs, and diagnostic logs are ignored.
 
 ## Shared KernelSU patch source
 
-This project consumes the six common KernelSU 32525 patches and the three
-`asteroids` patches from the shared monorepo submodule pinned to
-`bf5bfa9ba0e7430611cca4b55ab12885df2d4eaa`. The build script verifies that
-exact submodule HEAD and applies only those nine patches to the pinned KernelSU
-checkout.
+This project consumes the six common KernelSU 32601 patches and the four
+`asteroids` patches from the shared monorepo submodule. The build script
+requires a clean submodule checkout, records its HEAD in the build manifest,
+and applies those ten patches to the pinned KernelSU checkout.
 
 ## Artifact integrity
 
