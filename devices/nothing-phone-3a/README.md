@@ -4,8 +4,9 @@
 
 This directory is the independent Nothing Phone (3a) application and native
 build chain inside the Root My Device monorepo. It implements an **exact-build**
-temporary-root → KernelSU late-load flow for two A059/Asteroids firmwares
-(`B4.1-260618-1048` and `B4.1-260810-1153`) that share the identical kernel image.
+temporary-root → KernelSU late-load flow for three A059/Asteroids firmwares
+(`B4.1-260618-1048`, `B4.1-260810-1153`, and `C5.0-260915-2123`) that share the
+same kernel release.
 
 The app runs the bundled native payload through Shizuku's shell service,
 validates every supported device field before enabling Root, stages a matching
@@ -23,21 +24,21 @@ Root is temporary and disappears after a normal reboot.
 
 ## Supported target
 
-This device project supports **two exact builds** that share the identical kernel image:
+This device project supports **three exact builds** that share the same kernel release:
 
 | Field | Required value |
 | --- | --- |
 | Device | Nothing Phone (3a) |
 | Model | `A059` |
 | Device codename | `Asteroids` |
-| Build display | `B4.1-260618-1048` or `B4.1-260810-1153` |
-| Fingerprint | `Nothing/AsteroidsJPN/Asteroids:16/BQ2A.250721.001-BP2A.250605.031.A3/2606181048:user/release-keys` or `.../2608101153:user/release-keys` (matching the display) |
-| Android / SDK | Android 16 / SDK 36 |
-| Security patch | `2026-06-01` (with `260618`) or `2026-08-01` (with `260810`) |
+| Build display | `B4.1-260618-1048`, `B4.1-260810-1153`, or `C5.0-260915-2123` |
+| Fingerprint | `Nothing/AsteroidsJPN/Asteroids:16/BQ2A.250721.001-BP2A.250605.031.A3/2606181048:user/release-keys`, `.../2608101153:user/release-keys`, or `Nothing/AsteroidsJPN/Asteroids:17/CQ2A.260522.002-CP2A.260605.016/2609152123:user/release-keys` (matching the display) |
+| Android / SDK | Android 16 / SDK 36 (`260618`, `260810`) or Android 17 / SDK 37 (`260915`) |
+| Security patch | `2026-06-01` (`260618`), `2026-08-01` (`260810`), or `2026-09-01` (`260915`) |
 | Kernel | `6.1.157-android14-11-g82d681c9b06b-ab14634535` |
 | KMI / exploit core | `android14-6.1` / `core61` |
 | ABI / page size | `arm64-v8a` / 4096 bytes |
-| Status | `260618`: maintainer device-verified. `260810`: supported (identical kernel image). |
+| Status | `260618`: maintainer device-verified. `260810`: supported (identical kernel image). `260915`: connected-device identity allowlisted; root flow not yet verified. |
 
 The application compares model, device, build display, full fingerprint, SDK,
 security patch, kernel release, ABI, and page size. Display, fingerprint, and

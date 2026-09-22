@@ -9,10 +9,10 @@ claim of compatibility with every Nothing Phone (3a).
 | --- | --- |
 | `ro.product.model` | `A059` |
 | `ro.product.device` | `Asteroids` |
-| `ro.build.display.id` | `B4.1-260618-1048` or `B4.1-260810-1153` |
-| `ro.build.fingerprint` | `Nothing/AsteroidsJPN/Asteroids:16/BQ2A.250721.001-BP2A.250605.031.A3/2606181048:user/release-keys` or `.../2608101153:user/release-keys` (matching the display above) |
-| Android SDK | `36` |
-| Security patch | `2026-06-01` (with `260618`) or `2026-08-01` (with `260810`) |
+| `ro.build.display.id` | `B4.1-260618-1048`, `B4.1-260810-1153`, or `C5.0-260915-2123` |
+| `ro.build.fingerprint` | `Nothing/AsteroidsJPN/Asteroids:16/BQ2A.250721.001-BP2A.250605.031.A3/2606181048:user/release-keys`, `.../2608101153:user/release-keys`, or `Nothing/AsteroidsJPN/Asteroids:17/CQ2A.260522.002-CP2A.260605.016/2609152123:user/release-keys` (matching the display above) |
+| Android SDK | `36` (`260618`, `260810`) or `37` (`260915`) |
+| Security patch | `2026-06-01` (`260618`), `2026-08-01` (`260810`), or `2026-09-01` (`260915`) |
 | `uname -r` | `6.1.157-android14-11-g82d681c9b06b-ab14634535` |
 | primary ABI | `arm64-v8a` |
 | page size | `4096` |
@@ -31,9 +31,11 @@ src/targets/asteroids/jp/6.1.157-android14-11-g82d681c9b06b-ab14634535/
 the physical/KASLR route to this firmware. The Makefile accepts no other target
 or core in this public device-specific repository.
 
-## Build B4.1-260810-1153 status
+## Later build status
 
-`B4.1-260810-1153` shares the identical kernel image, so all `core61` offsets apply to both builds.
+`B4.1-260810-1153` shares the identical kernel image with the verified `260618`
+build. `C5.0-260915-2123` reports the same kernel release and is allowlisted from
+the connected device identity; its root flow has not yet been verified.
 
 ## Runtime contract
 

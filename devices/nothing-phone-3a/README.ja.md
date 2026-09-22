@@ -3,8 +3,8 @@
 [English](README.md) · [クイックスタート](QUICKSTART.ja.md) · [Repository概要](../../README.ja.md)
 
 このdirectoryは、Root My Device monorepo内のNothing Phone (3a)向け独立Android app・
-native build chainです。同一カーネルイメージを持つA059/Asteroidsの2つのfirmware
-（`B4.1-260618-1048` と `B4.1-260810-1153`）を対象に、**exact-build専用**
+native build chainです。同一カーネルリリースを持つA059/Asteroidsの3つのfirmware
+（`B4.1-260618-1048`、`B4.1-260810-1153`、`C5.0-260915-2123`）を対象に、**exact-build専用**
 temporary root → KernelSU late-loadを行います。
 
 Shizukuのshell serviceからAPK内蔵native payloadを実行し、対応端末情報をすべて照合して
@@ -21,21 +21,21 @@ downloadせず、analyticsもなく、Internet permissionも要求しません�
 
 ## 対応target
 
-このdevice projectが対応するのは次の **1 buildのみ**です。
+このdevice projectが対応するのは次の **3 buildのみ**です。
 
 | 項目 | 必須値 |
 | --- | --- |
 | 端末 | Nothing Phone (3a) |
 | Model | `A059` |
 | Device codename | `Asteroids` |
-| Build display | `B4.1-260618-1048` または `B4.1-260810-1153` |
-| Fingerprint | `Nothing/AsteroidsJPN/Asteroids:16/BQ2A.250721.001-BP2A.250605.031.A3/2606181048:user/release-keys` または `.../2608101153:user/release-keys`（displayと対応） |
-| Android / SDK | Android 16 / SDK 36 |
-| Security patch | `2026-06-01`（`260618`）または `2026-08-01`（`260810`） |
+| Build display | `B4.1-260618-1048`、`B4.1-260810-1153`、または `C5.0-260915-2123` |
+| Fingerprint | `Nothing/AsteroidsJPN/Asteroids:16/BQ2A.250721.001-BP2A.250605.031.A3/2606181048:user/release-keys`、`.../2608101153:user/release-keys`、または `Nothing/AsteroidsJPN/Asteroids:17/CQ2A.260522.002-CP2A.260605.016/2609152123:user/release-keys`（displayと対応） |
+| Android / SDK | Android 16 / SDK 36（`260618`、`260810`）または Android 17 / SDK 37（`260915`） |
+| Security patch | `2026-06-01`（`260618`）、`2026-08-01`（`260810`）、または `2026-09-01`（`260915`） |
 | Kernel | `6.1.157-android14-11-g82d681c9b06b-ab14634535` |
 | KMI / exploit core | `android14-6.1` / `core61` |
 | ABI / page size | `arm64-v8a` / 4096 bytes |
-| 状態 | `260618`: Maintainer実機確認済み。`260810`: 対応（同一カーネルイメージ）。 |
+| 状態 | `260618`: Maintainer実機確認済み。`260810`: 対応（同一カーネルイメージ）。`260915`: 接続端末のidentityをallowlistへ追加済み、root flowは未確認。 |
 
 Appはmodel、device、build display、完全なfingerprint、SDK、security patch、kernel release、
 ABI、page sizeを照合します。display・fingerprint・security patchは1つの対応setとして
