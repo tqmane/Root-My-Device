@@ -49,6 +49,27 @@
       "pageSize": 4096,
       "kernelImageSha256": "b344ddc133e77cb2924a5bdfac268509d542168c546b05c4443a23cceeea1a73",
       "status": "Supported: identical kernel image to B4.1-260618-1048; all core61 offsets shared."
+    },
+    {
+      "profileId": "asteroids-jp-C5.0-260915-2123",
+      "payload": "CVE-2026-43499",
+      "core": "core61",
+      "device": "asteroids",
+      "region": "JP",
+      "manufacturer": "Nothing",
+      "model": "A059",
+      "marketingName": "Nothing Phone (3a)",
+      "soc": "Qualcomm SM7635 (Snapdragon 7s Gen 3)",
+      "kernelRelease": "6.1.157-android14-11-g82d681c9b06b-ab14634535",
+      "kernelVersion": "Linux version 6.1.157-android14-11-g82d681c9b06b-ab14634535 (build-user@build-host) (Android (10087095, +pgo, +bolt, +lto, -mlgo, based on r487747c) clang version 17.0.2 (https://android.googlesource.com/toolchain/llvm-project d9f89f4d16663d5012e5c09495f3b30ece3d2362), LLD 17.0.2) #1 SMP PREEMPT Mon Dec 22 19:22:33 UTC 2025",
+      "kernelBuildVersion": "#1 SMP PREEMPT Mon Dec 22 19:22:33 UTC 2025",
+      "buildDisplay": "C5.0-260915-2123",
+      "buildFingerprint": "Nothing/AsteroidsJPN/Asteroids:17/CQ2A.260522.002-CP2A.260605.016/2609152123:user/release-keys",
+      "securityPatch": "2026-09-01",
+      "sdk": 37,
+      "abi": "arm64-v8a",
+      "pageSize": 4096,
+      "status": "Supported by exact build identity with the unchanged 6.1.157 kernel release; reuses the existing core61 offsets."
     }
   ]
 }

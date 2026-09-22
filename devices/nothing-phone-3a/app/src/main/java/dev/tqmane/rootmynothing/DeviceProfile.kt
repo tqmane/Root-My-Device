@@ -43,7 +43,6 @@ object AsteroidsTarget {
     const val MODEL = "A059"
     const val DEVICE = "Asteroids"
     const val KERNEL = "6.1.157-android14-11-g82d681c9b06b-ab14634535"
-    const val SDK = 36
     const val PAGE_SIZE = 4096L
     const val KMI = "android14-6.1"
     const val MANAGER_PACKAGE = "org.witaqua.pwn.kernelsu"
@@ -53,6 +52,7 @@ object AsteroidsTarget {
         val display: String,
         val fingerprint: String,
         val securityPatch: String,
+        val sdk: Int,
     )
 
     const val DISPLAY = "B4.1-260618-1048"
@@ -65,10 +65,16 @@ object AsteroidsTarget {
         "Nothing/AsteroidsJPN/Asteroids:16/BQ2A.250721.001-" +
             "BP2A.250605.031.A3/2608101153:user/release-keys"
     const val SECURITY_PATCH_260810 = "2026-08-01"
+    const val DISPLAY_260915 = "C5.0-260915-2123"
+    const val FINGERPRINT_260915 =
+        "Nothing/AsteroidsJPN/Asteroids:17/CQ2A.260522.002-" +
+            "CP2A.260605.016/2609152123:user/release-keys"
+    const val SECURITY_PATCH_260915 = "2026-09-01"
 
     val SUPPORTED_BUILDS = listOf(
-        SupportedBuild(DISPLAY, FINGERPRINT, SECURITY_PATCH),
-        SupportedBuild(DISPLAY_260810, FINGERPRINT_260810, SECURITY_PATCH_260810),
+        SupportedBuild(DISPLAY, FINGERPRINT, SECURITY_PATCH, 36),
+        SupportedBuild(DISPLAY_260810, FINGERPRINT_260810, SECURITY_PATCH_260810, 36),
+        SupportedBuild(DISPLAY_260915, FINGERPRINT_260915, SECURITY_PATCH_260915, 37),
     )
 
     private val SUPPORTED_DISPLAYS = SUPPORTED_BUILDS.map { it.display }
@@ -81,7 +87,6 @@ object AsteroidsTarget {
             if (snapshot.kernelRelease != KERNEL) {
                 add("KERNEL=${snapshot.kernelRelease} (expected $KERNEL)")
             }
-            if (snapshot.sdk != SDK) add("SDK=${snapshot.sdk} (expected $SDK)")
             if (snapshot.pageSize != PAGE_SIZE) {
                 add("PAGE=${snapshot.pageSize} (expected $PAGE_SIZE)")
             }
@@ -89,7 +94,8 @@ object AsteroidsTarget {
             val build = SUPPORTED_BUILDS.firstOrNull {
                 it.display == snapshot.display &&
                     it.fingerprint == snapshot.fingerprint &&
-                    it.securityPatch == snapshot.securityPatch
+                    it.securityPatch == snapshot.securityPatch &&
+                    it.sdk == snapshot.sdk
             }
             if (build == null) {
                 if (SUPPORTED_BUILDS.none { it.display == snapshot.display }) {
@@ -100,6 +106,9 @@ object AsteroidsTarget {
                 }
                 if (SUPPORTED_BUILDS.none { it.securityPatch == snapshot.securityPatch }) {
                     add("SECURITY_PATCH=${snapshot.securityPatch} (expected one of ${SUPPORTED_PATCHES.joinToString()})")
+                }
+                if (SUPPORTED_BUILDS.none { it.sdk == snapshot.sdk }) {
+                    add("SDK=${snapshot.sdk} (expected one of ${SUPPORTED_BUILDS.map { it.sdk }.distinct().joinToString()})")
                 }
                 if (isEmpty()) {
                     add("BUILD/FINGERPRINT/SECURITY_PATCH do not form one supported set (${SUPPORTED_DISPLAYS.joinToString()})")
